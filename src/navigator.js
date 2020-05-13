@@ -1,6 +1,5 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -28,6 +27,7 @@ const MovieStack = () => (
       options={({ route }) => ({
         headerTitle: route.params.headerTitle,
         headerStyle: { backgroundColor: '#EDEDEF' },
+        headerTitleStyle: { fontFamily: 'georgia' },
       })}
     />
   </Stack.Navigator>
@@ -35,7 +35,6 @@ const MovieStack = () => (
 
 const Navigator = () => (
   <>
-    <StatusBar barStyle="dark-content" />
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({

@@ -16,7 +16,7 @@ const Element = props => (
 const styles = StyleSheet.create({
   defaultStyle: {
     fontSize: 16,
-    fontFamily: 'Georgia',
+    fontFamily: 'georgia',
   },
 });
 

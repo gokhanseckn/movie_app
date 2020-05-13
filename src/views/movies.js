@@ -11,11 +11,12 @@ import {
 import Element from '../components/element';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const baseUrl = 'https://api.themoviedb.org/3';
 const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
 const apiKey = '9f856681c9163f666d3789c63c4b482e';
-const language = 'tr-TR';
+const language = 'en-US';
 
 const MovieRow = ({ movie, navigation }) => (
   <TouchableOpacity
@@ -35,8 +36,17 @@ const MovieRow = ({ movie, navigation }) => (
         <Element bold style={styles.title}>
           {movie.title}
         </Element>
-        <Element style={styles.releaseDate}>{movie.vote_average}</Element>
-        <Element style={styles.releaseDate}>{movie.release_date}</Element>
+        <View style={styles.voteContainer}>
+          <AnimatedCircularProgress
+            size={40}
+            width={4}
+            fill={movie.vote_average * 10}
+            tintColor={movie.vote_average > 7 ? '#75cc7d' : '#bfc234'}
+            backgroundColor={movie.vote_average > 7 ? '#90e898' : '#e8eb73'}>
+            {fill => <Element>{movie.vote_average}</Element>}
+          </AnimatedCircularProgress>
+          <Element style={styles.releaseDate}>{movie.release_date}</Element>
+        </View>
         <Element style={styles.overview} numberOfLines={5}>
           {movie.overview}
         </Element>
@@ -138,12 +148,14 @@ const styles = StyleSheet.create({
   segmentedControl: {
     marginBottom: 10,
     marginRight: 20,
+    fontFamily: 'georgia',
   },
   title: {
     fontSize: 18,
   },
   releaseDate: {
     fontSize: 16,
+    marginLeft: 10,
   },
   overview: {
     fontSize: 16,
@@ -159,6 +171,10 @@ const styles = StyleSheet.create({
   listHeader: {
     fontSize: 24,
     marginBottom: 10,
+  },
+  voteContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 export default Movies;
