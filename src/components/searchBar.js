@@ -11,9 +11,9 @@ const SearchBar = props => (
       color={'#CED0CE'}
     />
     <TextInput
-      {...props}
       placeholder="Search any movie or person"
       style={styles.input}
+      {...props}
     />
   </View>
 );
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    height: 40,
   },
 });
 export default SearchBar;

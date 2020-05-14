@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -15,6 +15,35 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import SearchBar from '../components/searchBar';
 import { baseImageUrl, getMovies, multiSearch } from '../networkManager';
 
+const Person = ({ person, navigation }) => (
+  <TouchableOpacity
+    style={styles.movieRowContainer}
+    // onPress={() =>
+    //   navigation.navigate('MovieDetail', {
+    //     headerTitle: movie.title,
+    //     movie: movie,
+    //   })
+  >
+    <Image
+      style={styles.image}
+      source={
+        person.profile_path
+          ? { uri: `${baseImageUrl}${person.profile_path}` }
+          : require('../assets/no-image.gif')
+      }
+    />
+    <View style={styles.textContainer}>
+      <Element bold style={styles.title}>
+        {person.name}
+      </Element>
+      <Element style={styles.overview}>{person.known_for_department}</Element>
+      <Element style={styles.overview}>{`Popularity: ${
+        person.popularity
+      }`}</Element>
+    </View>
+  </TouchableOpacity>
+);
+
 const MovieRow = ({ movie, navigation }) => (
   <TouchableOpacity
     style={styles.movieRowContainer}
@@ -27,7 +56,11 @@ const MovieRow = ({ movie, navigation }) => (
     <>
       <Image
         style={styles.image}
-        source={{ uri: `${baseImageUrl}${movie.poster_path}` }}
+        source={
+          movie.poster_path
+            ? { uri: `${baseImageUrl}${movie.poster_path}` }
+            : require('../assets/no-image.gif')
+        }
       />
       <View style={styles.textContainer}>
         <Element bold style={styles.title}>
@@ -116,6 +149,8 @@ const Movies = ({ navigation }) => {
           renderItem={({ item }) =>
             loading ? (
               <ActivityIndicator size="large" />
+            ) : item.media_type && item.media_type === 'person' ? (
+              <Person navigation={navigation} person={item} />
             ) : (
               <MovieRow navigation={navigation} movie={item} />
             )
