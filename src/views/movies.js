@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -12,11 +12,8 @@ import Element from '../components/element';
 import SegmentedControl from '@react-native-community/segmented-control';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-
-const baseUrl = 'https://api.themoviedb.org/3';
-const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
-const apiKey = '9f856681c9163f666d3789c63c4b482e';
-const language = 'en-US';
+import SearchBar from '../components/searchBar';
+import { baseImageUrl, getMovies, multiSearch } from '../networkManager';
 
 const MovieRow = ({ movie, navigation }) => (
   <TouchableOpacity
@@ -34,7 +31,7 @@ const MovieRow = ({ movie, navigation }) => (
       />
       <View style={styles.textContainer}>
         <Element bold style={styles.title}>
-          {movie.title}
+          {movie.title || movie.name}
         </Element>
         <View style={styles.voteContainer}>
           <AnimatedCircularProgress
@@ -60,33 +57,42 @@ const Movies = ({ navigation }) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [endpoint, setEndpoint] = useState('popular');
+
+  useEffect(() => {
+    switch (selectedIndex) {
+      case 0:
+        setEndpoint('/movie/popular');
+        break;
+      case 1:
+        setEndpoint('/movie/top_rated');
+        break;
+      case 2:
+        setEndpoint('/movie/upcoming');
+        break;
+      case 3:
+        setEndpoint('/movie/now_playing');
+        break;
+    }
+  }, [selectedIndex]);
 
   useEffect(() => {
     setLoading(true);
-    const get = async endpoint => {
-      switch (selectedIndex) {
-        case 0:
-          endpoint = '/movie/popular';
-          break;
-        case 1:
-          endpoint = '/movie/top_rated';
-          break;
-        case 2:
-          endpoint = '/movie/upcoming';
-          break;
-        case 3:
-          endpoint = '/movie/now_playing';
-          break;
-      }
-      const result = await fetch(
-        `${baseUrl}${endpoint}?api_key=${apiKey}&language=${language}&page=1`,
-      );
-      const res = await result.json();
-      setMovies(res.results);
-      setLoading(false);
-    };
-    get();
-  }, [selectedIndex]);
+    getMovies(endpoint)
+      .then(result => setMovies(result))
+      .then(() => setLoading(false));
+  }, [endpoint]);
+
+  const search = async searchText => {
+    if (searchText.length === 0) {
+      getMovies(endpoint)
+        .then(result => setMovies(result))
+        .then(() => setLoading(false));
+    } else {
+      const res = await multiSearch(searchText);
+      setMovies(res);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -94,6 +100,7 @@ const Movies = ({ navigation }) => {
         <Element style={styles.listHeader} bold>
           MOVIES
         </Element>
+        <SearchBar onChangeText={searchText => search(searchText)} />
         <SegmentedControl
           style={styles.segmentedControl}
           values={['Popular', 'Top Rated', 'Upcoming', 'Now Playing']}
