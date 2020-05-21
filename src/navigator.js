@@ -1,6 +1,11 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { Appearance } from 'react-native';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Movies from '../src/views/movies';
@@ -33,9 +38,11 @@ const MovieStack = () => (
   </Stack.Navigator>
 );
 
-const Navigator = () => (
-  <>
-    <NavigationContainer>
+const Navigator = () => {
+  const colorScheme = Appearance.getColorScheme();
+  return (
+    <NavigationContainer
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -55,6 +62,6 @@ const Navigator = () => (
         <Tab.Screen name="My List" component={MyList} />
       </Tab.Navigator>
     </NavigationContainer>
-  </>
-);
+  );
+};
 export default Navigator;
