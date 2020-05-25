@@ -23,10 +23,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: '#CED0CE',
-    height: 30,
+    height: 36,
     borderRadius: 4,
     marginRight: 20,
     marginBottom: 10,
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
+    fontSize: 18,
   },
 });
 export default SearchBar;

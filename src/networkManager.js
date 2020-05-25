@@ -1,5 +1,6 @@
 const baseUrl = 'https://api.themoviedb.org/3';
 export const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
+export const baseBackdropImageUrl = 'https://image.tmdb.org/t/p/w1280';
 const apiKey = '9f856681c9163f666d3789c63c4b482e';
 const adult = false;
 const language = 'en-US';
@@ -11,6 +12,22 @@ export const getMovies = async endpoint => {
   );
   const res = await result.json();
   return res.results;
+};
+
+export const getMovieDetail = async movieId => {
+  const result = await fetch(
+    `${baseUrl}/movie/${movieId}?api_key=${apiKey}&language=${language}`,
+  );
+  const res = await result.json();
+  return res;
+};
+
+export const getCredits = async movieId => {
+  const result = await fetch(
+    `${baseUrl}/movie/${movieId}/credits?api_key=${apiKey}`,
+  );
+  const res = await result.json();
+  return res.cast;
 };
 
 export const multiSearch = async searchText => {

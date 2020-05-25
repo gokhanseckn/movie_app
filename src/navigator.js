@@ -30,9 +30,7 @@ const MovieStack = () => (
       name="MovieDetail"
       component={MovieDetail}
       options={({ route }) => ({
-        headerTitle: route.params.headerTitle,
-        headerStyle: { backgroundColor: '#EDEDEF' },
-        headerTitleStyle: { fontFamily: 'georgia' },
+        headerShown: false,
       })}
     />
   </Stack.Navigator>

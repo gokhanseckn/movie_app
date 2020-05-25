@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   SafeAreaView,
   StyleSheet,
@@ -13,7 +12,6 @@ import MovieRow from '../views/movieRow';
 import PersonRow from '../views/personRow';
 import SearchBar from '../components/searchBar';
 import { getMovies, multiSearch } from '../networkManager';
-const screenHeight = Dimensions.get('window').height;
 
 const Movies = ({ navigation }) => {
   const [movies, setMovies] = useState([]);
@@ -21,6 +19,7 @@ const Movies = ({ navigation }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedSearchIndex, setSelectedSearchIndex] = useState(0);
   const [endpoint, setEndpoint] = useState('popular');
 
   useEffect(() => {
@@ -70,42 +69,56 @@ const Movies = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        {/* <Element style={styles.listHeader} bold>
-          MOVIES
-        </Element> */}
+        <Element style={styles.listHeader} bold>
+          App Name
+        </Element>
         <SearchBar onChangeText={searchText => search(searchText)} />
-        <SegmentedControl
-          style={styles.segmentedControl}
-          values={['Popular', 'Top Rated', 'Upcoming', 'Now Playing']}
-          selectedIndex={selectedIndex}
-          onChange={event => {
-            setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
-          }}
-        />
         {!isSearching ? (
-          <FlatList
-            data={movies}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.flatListContentContainer}
-            renderItem={({ item }) =>
-              loading ? (
-                <ActivityIndicator size="large" />
-              ) : (
-                <MovieRow navigation={navigation} movie={item} />
-              )
-            }
-            ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
-            keyExtractor={item => item.id.toString()}
-          />
+          <React.Fragment>
+            <SegmentedControl
+              tintColor={'#c9ae4b'}
+              textColor="black"
+              activeTextColor="white"
+              style={styles.segmentedControl}
+              values={['Popular', 'Top Rated', 'Upcoming', 'Now Playing']}
+              selectedIndex={selectedIndex}
+              onChange={event => {
+                setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
+              }}
+            />
+            <FlatList
+              data={movies}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.flatListContentContainer}
+              renderItem={({ item }) =>
+                loading ? (
+                  <ActivityIndicator size="large" />
+                ) : (
+                  <MovieRow navigation={navigation} movie={item} />
+                )
+              }
+              ItemSeparatorComponent={() => (
+                <View style={styles.itemSeperator} />
+              )}
+              keyExtractor={item => item.id.toString()}
+            />
+          </React.Fragment>
         ) : (
           <React.Fragment>
-            {movies.length > 0 && (
+            <SegmentedControl
+              tintColor={'#c9ae4b'}
+              textColor="black"
+              activeTextColor="white"
+              style={styles.segmentedControl}
+              values={['Movies', 'People']}
+              selectedIndex={selectedSearchIndex}
+              onChange={event => {
+                setSelectedSearchIndex(event.nativeEvent.selectedSegmentIndex);
+              }}
+            />
+            {movies.length > 0 && selectedSearchIndex === 0 && (
               <React.Fragment>
-                <Element style={{ marginBottom: 4 }} bold>
-                  {`screenHeight:${screenHeight}`}
-                </Element>
                 <FlatList
-                  style={{ height: screenHeight <= 700 ? '36%' : '46%' }}
                   data={movies}
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={styles.flatListContentContainer}
@@ -123,19 +136,19 @@ const Movies = ({ navigation }) => {
                 />
               </React.Fragment>
             )}
-            {people.length > 0 && (
+            {people.length > 0 && selectedSearchIndex === 1 && (
               <React.Fragment>
-                <View style={styles.seperator} />
-                <Element style={{ marginBottom: 4 }} bold>
-                  PERSON
-                </Element>
                 <FlatList
-                  style={{ height: '50%' }}
-                  horizontal
+                  contentContainerStyle={styles.flatListContentContainer}
                   data={people}
+                  showsVerticalScrollIndicator={false}
                   renderItem={({ item }) => (
                     <PersonRow navigation={navigation} person={item} />
                   )}
+                  ItemSeparatorComponent={() => (
+                    <View style={styles.itemSeperator} />
+                  )}
+                  keyExtractor={item => item.id.toString()}
                 />
               </React.Fragment>
             )}
@@ -151,23 +164,23 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   flatListContentContainer: {
-    paddingBottom: 80,
+    paddingBottom: 250,
   },
   segmentedControl: {
     marginBottom: 10,
     marginRight: 20,
+    height: 32,
   },
   itemSeperator: {
-    marginVertical: 10,
-  },
-  seperator: {
     height: 1,
     backgroundColor: '#CED0CE',
     marginVertical: 10,
   },
   listHeader: {
-    fontSize: 24,
+    fontSize: 40,
     marginBottom: 10,
+    fontFamily: 'Fjalla One',
+    color: '#c9ae4b',
   },
 });
 export default Movies;
