@@ -5,6 +5,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { baseImageUrl } from '../networkManager';
 
+const formatDate = date => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  date = new Date(date);
+  return date.toLocaleDateString('en-US', options);
+};
+
 const MovieRow = ({ navigation, movie }) => (
   <TouchableOpacity
     style={styles.movieRowContainer}
@@ -16,13 +22,16 @@ const MovieRow = ({ navigation, movie }) => (
     }>
     <>
       {movie.poster_path ? (
-        <Image
-          style={styles.movieImage}
-          source={{ uri: `${baseImageUrl}${movie.poster_path}` }}
-        />
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.movieImage}
+            source={{ uri: `${baseImageUrl}${movie.poster_path}` }}
+          />
+        </View>
       ) : (
         <View style={styles.noImage} />
       )}
+
       <View style={styles.textContainer}>
         <Element bold style={styles.title}>
           {movie.title || movie.name}
@@ -30,7 +39,9 @@ const MovieRow = ({ navigation, movie }) => (
         <View style={styles.voteContainer}>
           <AnimatedCircularProgress
             size={40}
-            width={4}
+            width={3}
+            dashedTint={{ width: 2, gap: 2 }}
+            dashedBackground={{ width: 2, gap: 2 }}
             fill={movie.vote_average * 10}
             tintColor={movie.vote_average > 7 ? '#75cc7d' : '#bfc234'}
             backgroundColor={movie.vote_average > 7 ? '#90e898' : '#e8eb73'}>
@@ -40,7 +51,9 @@ const MovieRow = ({ navigation, movie }) => (
             )}
           </AnimatedCircularProgress>
 
-          <Element style={styles.releaseDate}>{movie.release_date}</Element>
+          <Element style={styles.releaseDate}>
+            {formatDate(movie.release_date)}
+          </Element>
         </View>
 
         <Element style={styles.overview} numberOfLines={3}>
@@ -69,7 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   title: {
-    color: '#c9ae4b',
+    color: '#c7a543',
     fontFamily: 'Fjalla One',
   },
   voteContainer: {
@@ -97,6 +110,12 @@ const styles = StyleSheet.create({
   voteAverage: {
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  imageContainer: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
   },
 });
 

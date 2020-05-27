@@ -20,7 +20,7 @@ const Movies = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedSearchIndex, setSelectedSearchIndex] = useState(0);
-  const [endpoint, setEndpoint] = useState('popular');
+  const [endpoint, setEndpoint] = useState('/movie/popular');
 
   useEffect(() => {
     switch (selectedIndex) {
@@ -70,13 +70,13 @@ const Movies = ({ navigation }) => {
     <SafeAreaView>
       <View style={styles.container}>
         <Element style={styles.listHeader} bold>
-          App Name
+          Movies
         </Element>
         <SearchBar onChangeText={searchText => search(searchText)} />
         {!isSearching ? (
           <React.Fragment>
             <SegmentedControl
-              tintColor={'#c9ae4b'}
+              tintColor={'#c7a543'}
               textColor="black"
               activeTextColor="white"
               style={styles.segmentedControl}
@@ -106,11 +106,11 @@ const Movies = ({ navigation }) => {
         ) : (
           <React.Fragment>
             <SegmentedControl
-              tintColor={'#c9ae4b'}
+              values={['Movies', 'Person']}
+              tintColor={'#c7a543'}
               textColor="black"
               activeTextColor="white"
               style={styles.segmentedControl}
-              values={['Movies', 'People']}
               selectedIndex={selectedSearchIndex}
               onChange={event => {
                 setSelectedSearchIndex(event.nativeEvent.selectedSegmentIndex);
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
   segmentedControl: {
     marginBottom: 10,
     marginRight: 20,
-    height: 32,
   },
   itemSeperator: {
     height: 1,
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginBottom: 10,
     fontFamily: 'Fjalla One',
-    color: '#c9ae4b',
+    color: '#c7a543',
   },
 });
 export default Movies;

@@ -11,6 +11,7 @@ const SearchBar = props => (
       color={'#CED0CE'}
     />
     <TextInput
+      clearButtonMode="always"
       placeholder="Search any movie or person"
       style={styles.input}
       {...props}
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: '#CED0CE',
-    height: 36,
+    height: 32,
     borderRadius: 4,
     marginRight: 20,
     marginBottom: 10,
@@ -37,8 +38,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
-    fontSize: 18,
+    fontSize: 16,
   },
 });
 export default SearchBar;
