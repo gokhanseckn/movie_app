@@ -1,6 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import Element from '../components/element';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { baseImageUrl } from '../networkManager';
 const PersonRow = ({ person, navigation }) => (
   <TouchableOpacity
@@ -20,12 +19,12 @@ const PersonRow = ({ person, navigation }) => (
       ) : (
         <View style={styles.noImage} />
       )}
-      <Element bold style={styles.name}>
+      <Text bold style={styles.name}>
         {person.name}
-      </Element>
-      <Element bold style={styles.name}>
+      </Text>
+      <Text bold style={styles.name}>
         {person.known_for_department}
-      </Element>
+      </Text>
     </View>
   </TouchableOpacity>
 );
@@ -38,8 +37,9 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: 'Fjalla One',
-    color: '#c9ae4b',
+    color: '#c7a543',
     marginLeft: 10,
+    fontSize: 16,
   },
   buttonContainer: {
     flexDirection: 'column',

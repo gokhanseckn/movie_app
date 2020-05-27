@@ -13,6 +13,7 @@ import MovieDetail from '../src/views/movieDetail';
 import Discover from '../src/views/discover';
 import MyList from '../src/views/myList';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { colors } from './theme/color';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,6 +43,7 @@ const Navigator = () => {
     <NavigationContainer
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator
+        tabBarOptions={{ activeTintColor: colors.gold }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -50,7 +52,7 @@ const Navigator = () => {
             } else if (route.name === 'Discover') {
               iconName = 'ios-albums';
             } else if (route.name === 'My List') {
-              iconName = 'ios-heart';
+              iconName = focused ? 'ios-heart' : 'ios-heart-empty';
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },

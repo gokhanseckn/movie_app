@@ -1,17 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
 import {
+  ActionSheetIOS,
   ActivityIndicator,
   Dimensions,
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   StatusBar,
 } from 'react-native';
-import Element from '../../src/components/element';
+import AsyncStorage from '@react-native-community/async-storage';
 // import YouTube from 'react-native-youtube';
 import {
   baseImageUrl,
@@ -19,6 +22,7 @@ import {
   getMovieDetail,
 } from '../networkManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { colors } from '../theme/color';
 
 const isIphoneX = Dimensions.get('window').height >= 812;
 
@@ -32,14 +36,71 @@ const MovieDetail = ({ route, navigation }) => {
   const [isReadMoreClicked, setIsReadMoreClicked] = useState(false);
   const [isWishlistClicked, setIsWishlistClicked] = useState(false);
   const [isSeenlistClicked, setIsSeenlistClicked] = useState(false);
-  const [isCustomlistlicked, setIsCustomlistlicked] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   // const videoUrl = `https://api.themoviedb.org/3/movie/${
   //   movie.id
   // }/videos?api_key=9f856681c9163f666d3789c63c4b482e&language=en-US`;
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      return error;
+    }
+  };
 
-  const handleWishlist = () => setIsWishlistClicked(!isWishlistClicked);
-  const handleSeenlist = () => setIsSeenlistClicked(!isSeenlistClicked);
-  const handleCustomlist = () => setIsCustomlistlicked(!isCustomlistlicked);
+  const removeData = async (key, value) => {
+    try {
+      await AsyncStorage.removeItem(key, value);
+    } catch (error) {
+      return error;
+    }
+  };
+  const handleWishlist = async () => {
+    setIsWishlistClicked(!isWishlistClicked);
+    if (!isWishlistClicked) {
+      setIsSeenlistClicked(false);
+      await storeData('wishlist', movie.id.toString());
+      // await removeData('seenlist');
+      // } else {
+      // await removeData('wishlist');
+    }
+  };
+
+  const handleSeenlist = async () => {
+    setIsSeenlistClicked(!isSeenlistClicked);
+    if (!isSeenlistClicked) {
+      setIsWishlistClicked(false);
+      await storeData('seenlist', movie.id.toString());
+      // await removeData('wishlist');
+      // } else {
+      // await removeData('seenlist');
+    }
+  };
+
+  const handleCustomlist = () =>
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        title: `Add or remove ${movie.title} from your lists`,
+        tintColor: colors.gold,
+        options: [
+          !isWishlistClicked ? 'Add to wishlist' : 'Remove from wishlist',
+          !isSeenlistClicked ? 'Add to seenlist' : 'Remove from seenlist',
+          'Create list',
+          'Cancel',
+        ],
+        cancelButtonIndex: 3,
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          handleWishlist();
+        } else if (buttonIndex === 1) {
+          handleSeenlist();
+        } else if (buttonIndex === 2) {
+          setIsModalVisible(false);
+          setIsModalVisible(true);
+        }
+      },
+    );
 
   useEffect(() => {
     getMovieDetail(movie.id).then(detail => {
@@ -87,22 +148,22 @@ const MovieDetail = ({ route, navigation }) => {
               style={styles.goBackIcon}
               name="ios-arrow-back"
               size={24}
-              color={'#c9ae4b'}
+              color={colors.gold}
             />
-            <Element bold style={styles.goBackText}>
+            <Text bold style={styles.goBackText}>
               Movies
-            </Element>
+            </Text>
           </TouchableOpacity>
-          <Element numberOfLines={1} style={styles.title}>
+          <Text numberOfLines={1} style={styles.title}>
             {movieDetail.title}
-          </Element>
+          </Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.genreContainer}>
             {genres.map((genre, index) => (
               <TouchableOpacity key={index} style={styles.genreButton}>
-                <Element style={styles.genreText}>{genre.name}</Element>
+                <Text style={styles.genreText}>{genre.name}</Text>
                 <Ionicons
                   style={styles.icon}
                   name="ios-arrow-forward"
@@ -131,23 +192,25 @@ const MovieDetail = ({ route, navigation }) => {
                       styles.wishlist,
                       {
                         backgroundColor: isWishlistClicked
-                          ? 'red'
-                          : 'transparent',
+                          ? colors.red
+                          : colors.transparent,
                       },
                     ]}>
                     <Ionicons
                       style={styles.listIcons}
                       name="ios-heart-empty"
-                      color={!isWishlistClicked ? 'red' : 'white'}
+                      color={!isWishlistClicked ? colors.red : colors.white}
                       size={20}
                     />
-                    <Element
+                    <Text
                       style={[
                         styles.wishlistText,
-                        { color: isWishlistClicked ? 'white' : 'red' },
+                        {
+                          color: isWishlistClicked ? colors.white : colors.red,
+                        },
                       ]}>
                       {isWishlistClicked ? 'In wishlist' : 'Wishlist'}
-                    </Element>
+                    </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -157,23 +220,27 @@ const MovieDetail = ({ route, navigation }) => {
                       styles.seenlist,
                       {
                         backgroundColor: isSeenlistClicked
-                          ? 'green'
-                          : 'transparent',
+                          ? colors.green
+                          : colors.transparent,
                       },
                     ]}>
                     <Ionicons
                       style={styles.listIcons}
                       name="ios-eye"
-                      color={!isSeenlistClicked ? 'green' : 'white'}
+                      color={!isSeenlistClicked ? colors.green : colors.white}
                       size={20}
                     />
-                    <Element
+                    <Text
                       style={[
                         styles.seenlistText,
-                        { color: isSeenlistClicked ? 'white' : 'green' },
+                        {
+                          color: isSeenlistClicked
+                            ? colors.white
+                            : colors.green,
+                        },
                       ]}>
                       {isSeenlistClicked ? 'Seen' : 'Seenlist'}
-                    </Element>
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
@@ -182,44 +249,52 @@ const MovieDetail = ({ route, navigation }) => {
                   <Ionicons
                     style={styles.listIcons}
                     name="ios-list"
-                    color={!isCustomlistlicked ? '#c7a543' : 'white'}
+                    color={colors.gold}
                     size={20}
                   />
-                  <Element style={styles.customlistText}>
-                    Add to custom list
-                  </Element>
+                  <Text style={styles.customlistText}>Add to custom list</Text>
                 </TouchableOpacity>
               </View>
             </View>
             <View style={styles.itemSeperator} />
             <View style={styles.subContainer}>
-              <Element bold style={styles.overviewHeaderText}>
+              <Text bold style={styles.overviewHeaderText}>
                 Overview:
-              </Element>
-              <Element
+              </Text>
+              <Text
                 numberOfLines={!isReadMoreClicked && 3}
                 style={styles.overviewText}>
                 {movieDetail.overview}
-              </Element>
+              </Text>
               <TouchableOpacity
                 style={styles.readMoreButton}
                 onPress={() => setIsReadMoreClicked(!isReadMoreClicked)}>
-                <Element style={styles.readMoreButtonText}>
+                <Text style={styles.readMoreButtonText}>
                   {isReadMoreClicked ? 'Less' : 'Read More'}
-                </Element>
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.itemSeperator} />
           </View>
         </View>
       )}
+      <View>
+        <Modal
+          animationType="slide"
+          visible={isModalVisible}
+          presentationStyle="pageSheet">
+          <View>
+            <Text>TEST</Text>
+          </View>
+        </Modal>
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
   },
   youtube: {
     height: 240,
@@ -232,10 +307,12 @@ const styles = StyleSheet.create({
   overviewHeaderText: {
     marginBottom: 10,
     fontFamily: 'Fjalla One',
+    fontSize: 16,
   },
   overviewText: {
-    color: 'gray',
+    color: colors.gray,
     lineHeight: 20,
+    fontSize: 16,
   },
   backdropImage: {
     width: '100%',
@@ -253,7 +330,7 @@ const styles = StyleSheet.create({
   },
   genreButton: {
     borderRadius: 14,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     flexDirection: 'row',
     marginRight: 8,
     paddingHorizontal: 8,
@@ -279,13 +356,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   goBackText: {
-    color: '#c9ae4b',
+    color: colors.gold,
     fontSize: 18,
     fontFamily: 'Fjalla One',
   },
   title: {
     fontFamily: 'Fjalla One',
-    color: '#c9ae4b',
+    color: colors.gold,
     fontSize: 40,
     bottom: isIphoneX ? 190 : 210,
     marginLeft: 20,
@@ -295,28 +372,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   imageContainer: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowColor: colors.black,
+    shadowOffset: { width: 2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
   detailTopContainer: {
     flexDirection: 'row',
   },
   itemSeperator: {
     height: 1,
-    backgroundColor: '#CED0CE',
+    backgroundColor: colors.seperator,
     marginVertical: 6,
   },
   readMoreButton: {
     marginTop: 6,
   },
   readMoreButtonText: {
-    color: '#80acb3',
+    color: colors.lightBlue,
+    fontSize: 16,
   },
   listButtonContainer: {
     marginLeft: 10,
-    // width: 200,
     justifyContent: 'space-around',
     height: 100,
   },
@@ -334,23 +411,24 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   customList: {
-    borderColor: '#c7a543',
+    borderColor: colors.gold,
     width: '60%',
   },
   wishlist: {
-    borderColor: 'red',
+    borderColor: colors.red,
   },
   seenlist: {
-    borderColor: 'green',
+    borderColor: colors.green,
   },
   customlistText: {
-    color: '#c7a543',
-  },
-  seenlistText: {
-    color: 'green',
+    color: colors.gold,
+    fontSize: 16,
   },
   wishlistText: {
-    color: 'red',
+    fontSize: 16,
+  },
+  seenlistText: {
+    fontSize: 16,
   },
 });
 

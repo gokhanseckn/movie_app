@@ -4,14 +4,15 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
-import Element from '../components/element';
 import SegmentedControl from '@react-native-community/segmented-control';
 import MovieRow from '../views/movieRow';
 import PersonRow from '../views/personRow';
 import SearchBar from '../components/searchBar';
 import { getMovies, multiSearch } from '../networkManager';
+import { colors } from '../theme/color';
 
 const Movies = ({ navigation }) => {
   const [movies, setMovies] = useState([]);
@@ -69,16 +70,16 @@ const Movies = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Element style={styles.listHeader} bold>
+        <Text style={styles.listHeader} bold>
           Movies
-        </Element>
+        </Text>
         <SearchBar onChangeText={searchText => search(searchText)} />
         {!isSearching ? (
           <React.Fragment>
             <SegmentedControl
-              tintColor={'#c7a543'}
-              textColor="black"
-              activeTextColor="white"
+              tintColor={colors.gold}
+              textColor={colors.black}
+              activeTextColor={colors.white}
               style={styles.segmentedControl}
               values={['Popular', 'Top Rated', 'Upcoming', 'Now Playing']}
               selectedIndex={selectedIndex}
@@ -107,9 +108,9 @@ const Movies = ({ navigation }) => {
           <React.Fragment>
             <SegmentedControl
               values={['Movies', 'Person']}
-              tintColor={'#c7a543'}
-              textColor="black"
-              activeTextColor="white"
+              tintColor={colors.gold}
+              textColor={colors.black}
+              activeTextColor={colors.white}
               style={styles.segmentedControl}
               selectedIndex={selectedSearchIndex}
               onChange={event => {
@@ -172,14 +173,14 @@ const styles = StyleSheet.create({
   },
   itemSeperator: {
     height: 1,
-    backgroundColor: '#CED0CE',
+    backgroundColor: colors.seperator,
     marginVertical: 10,
   },
   listHeader: {
     fontSize: 40,
     marginBottom: 10,
     fontFamily: 'Fjalla One',
-    color: '#c7a543',
+    color: colors.gold,
   },
 });
 export default Movies;

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, TouchableOpacity, StyleSheet, View } from 'react-native';
-import Element from '../components/element';
+import { Image, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { baseImageUrl } from '../networkManager';
+import { colors } from '../theme/color';
 
 const formatDate = date => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -20,7 +20,7 @@ const MovieRow = ({ navigation, movie }) => (
         movie: movie,
       })
     }>
-    <>
+    <React.Fragment>
       {movie.poster_path ? (
         <View style={styles.imageContainer}>
           <Image
@@ -33,9 +33,9 @@ const MovieRow = ({ navigation, movie }) => (
       )}
 
       <View style={styles.textContainer}>
-        <Element bold style={styles.title}>
+        <Text bold style={styles.title}>
           {movie.title || movie.name}
-        </Element>
+        </Text>
         <View style={styles.voteContainer}>
           <AnimatedCircularProgress
             size={40}
@@ -43,26 +43,28 @@ const MovieRow = ({ navigation, movie }) => (
             dashedTint={{ width: 2, gap: 2 }}
             dashedBackground={{ width: 2, gap: 2 }}
             fill={movie.vote_average * 10}
-            tintColor={movie.vote_average > 7 ? '#75cc7d' : '#bfc234'}
-            backgroundColor={movie.vote_average > 7 ? '#90e898' : '#e8eb73'}>
+            tintColor={movie.vote_average > 7 ? colors.green : colors.gold}
+            backgroundColor={
+              movie.vote_average > 7 ? colors.lightGreen : colors.lightGold
+            }>
             {fill => (
-              <Element style={styles.voteAverage}>{`${movie.vote_average *
-                10}%`}</Element>
+              <Text style={styles.voteAverage}>{`${movie.vote_average *
+                10}%`}</Text>
             )}
           </AnimatedCircularProgress>
 
-          <Element style={styles.releaseDate}>
+          <Text style={styles.releaseDate}>
             {formatDate(movie.release_date)}
-          </Element>
+          </Text>
         </View>
 
-        <Element style={styles.overview} numberOfLines={3}>
+        <Text style={styles.overview} numberOfLines={3}>
           {movie.overview}
-        </Element>
+        </Text>
       </View>
 
       <Ionicons style={styles.icon} name="ios-arrow-forward" size={20} />
-    </>
+    </React.Fragment>
   </TouchableOpacity>
 );
 
@@ -82,8 +84,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   title: {
-    color: '#c7a543',
+    color: colors.gold,
     fontFamily: 'Fjalla One',
+    fontSize: 16,
   },
   voteContainer: {
     flexDirection: 'row',
@@ -112,10 +115,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   imageContainer: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowColor: colors.black,
+    shadowOffset: { width: 2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
 });
 
