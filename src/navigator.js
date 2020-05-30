@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Movies from '../src/views/movies';
 import MovieDetail from '../src/views/movieDetail';
+import SeeAllPage from '../src/views/seeAllPage';
 import Discover from '../src/views/discover';
 import MyList from '../src/views/myList';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,6 +31,13 @@ const MovieStack = () => (
     <Stack.Screen
       name="MovieDetail"
       component={MovieDetail}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="SeeAllPage"
+      component={SeeAllPage}
       options={({ route }) => ({
         headerShown: false,
       })}

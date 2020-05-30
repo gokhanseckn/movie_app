@@ -4,7 +4,10 @@ Movie app is an application that uses the [TMDB API](https://www.themoviedb.org/
 
 The app's design is based on [Thomas' app](https://github.com/Dimillian/MovieSwiftUI) which is written in SwiftUI.
 
-<img src="./src/assets/home.png" width=290>
-<img src="./src/assets/search.png" width=290>
-<img src="./src/assets/detail_1.png" width=290>
-<img src="./src/assets/detail_2.png" width=290>
+|        Home Screen         |        Search Screen         |
+| :------------------------: | :--------------------------: |
+| ![](./src/assets/home.png) | ![](./src/assets/search.png) |
+
+|        Detail Screen 1         |        Detail Screen 2         |
+| :----------------------------: | :----------------------------: |
+| ![](./src/assets/detail_1.png) | ![](./src/assets/detail_2.png) |

@@ -241,6 +241,33 @@ const MovieDetail = ({ route, navigation }) => {
                   />
                   <Text style={styles.customlistText}>Add to custom list</Text>
                 </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <AnimatedCircularProgress
+                    size={36}
+                    width={3}
+                    dashedTint={{ width: 2, gap: 2 }}
+                    dashedBackground={{ width: 2, gap: 2 }}
+                    fill={movieDetail.vote_average * 10}
+                    tintColor={
+                      movieDetail.vote_average > 7 ? colors.green : colors.gold
+                    }
+                    backgroundColor={
+                      movieDetail.vote_average > 7
+                        ? colors.lightGreen
+                        : colors.lightGold
+                    }>
+                    {fill => (
+                      <Text
+                        style={
+                          styles.voteAverage
+                        }>{`${movieDetail.vote_average * 10}%`}</Text>
+                    )}
+                  </AnimatedCircularProgress>
+                  <Text
+                    style={{
+                      marginLeft: 6,
+                    }}>{`${movieDetail.vote_count} Ratings`}</Text>
+                </View>
               </View>
             </View>
             <View style={styles.itemSeperator} />
@@ -269,7 +296,14 @@ const MovieDetail = ({ route, navigation }) => {
               <Text bold style={styles.subTitle}>
                 Cast
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('SeeAllPage', {
+                    header: movieDetail.title,
+                    cast: movieCast,
+                    type: 'cast',
+                  })
+                }>
                 <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>
                   See all
                 </Text>
@@ -279,7 +313,7 @@ const MovieDetail = ({ route, navigation }) => {
               style={{ marginBottom: 4 }}
               horizontal
               showsHorizontalScrollIndicator={false}>
-              {movieCast.map((cast, index) => (
+              {movieCast.slice(0, 6).map((cast, index) => (
                 <TouchableOpacity key={index} style={styles.imageButton}>
                   {cast.profile_path ? (
                     <Image
@@ -318,14 +352,21 @@ const MovieDetail = ({ route, navigation }) => {
               <Text bold style={styles.subTitle}>
                 Recommenned Movies
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('SeeAllPage', {
+                    type: 'movie',
+                    header: movie.title,
+                    movie: recommennedMovies,
+                  })
+                }>
                 <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>
                   See all
                 </Text>
               </TouchableOpacity>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {recommennedMovies.map((recommennedMovie, index) => (
+              {recommennedMovies.slice(0, 4).map((recommennedMovie, index) => (
                 <TouchableOpacity key={index} style={styles.imageButton}>
                   {recommennedMovie.poster_path ? (
                     <Image
@@ -500,7 +541,7 @@ const styles = StyleSheet.create({
   listButtonContainer: {
     marginLeft: 10,
     justifyContent: 'space-around',
-    height: 100,
+    // height: 120,
   },
   listIcons: {
     marginRight: 6,
@@ -567,6 +608,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     color: colors.gray,
+  },
+  voteAverage: {
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 });
 
