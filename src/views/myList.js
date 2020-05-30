@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -7,42 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import { colors } from '../theme/color';
 import SegmentedControl from '@react-native-community/segmented-control';
 
 const MyList = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [wishlist, setWishlist] = useState('0');
-  const [seenlist, setSeenlist] = useState('0');
-  const [storageKey, setStorageKey] = useState('wishlist');
-
-  useEffect(() => {
-    switch (selectedIndex) {
-      case 0:
-        setStorageKey('wishlist');
-        break;
-      case 1:
-        setStorageKey('seenlist');
-        break;
-    }
-  }, [selectedIndex]);
-
-  useEffect(() => {
-    const readData = async () => {
-      try {
-        // await AsyncStorage.clear();
-        if (storageKey === 'wishlist') {
-          setWishlist(await AsyncStorage.getItem(storageKey));
-        } else if (storageKey === 'seenlist') {
-          setSeenlist(await AsyncStorage.getItem(storageKey));
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    readData();
-  }, [storageKey]);
 
   return (
     <React.Fragment>
@@ -69,7 +38,7 @@ const MyList = () => {
             <View style={styles.section}>
               <Text style={styles.sectionText}>0 movies in wishlist</Text>
             </View>
-            <Text>{wishlist}</Text>
+            <Text>wishlist</Text>
           </View>
         )}
         {selectedIndex === 1 && (
@@ -77,7 +46,7 @@ const MyList = () => {
             <View style={styles.section}>
               <Text style={styles.sectionText}>0 movies in seenlist</Text>
             </View>
-            <Text>{seenlist}</Text>
+            <Text>seenlist</Text>
           </View>
         )}
       </SafeAreaView>

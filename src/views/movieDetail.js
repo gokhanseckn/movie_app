@@ -12,23 +12,27 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  StatusBar,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-// import YouTube from 'react-native-youtube';
+import YouTube from 'react-native-youtube';
 import {
   baseImageUrl,
   baseBackdropImageUrl,
+  getCast,
+  getDirector,
   getMovieDetail,
+  getRecommendedMovies,
+  videoUrl,
+  youtubeApiKey,
 } from '../networkManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { colors } from '../theme/color';
 
 const isIphoneX = Dimensions.get('window').height >= 812;
 
 const MovieDetail = ({ route, navigation }) => {
   const { movie } = route.params;
-  // const [videoId, setVideoId] = useState('0');
+  const [videoId, setVideoId] = useState('0');
   const [movieDetail, setMovieDetail] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [genres, setGenres] = useState([]);
@@ -37,32 +41,14 @@ const MovieDetail = ({ route, navigation }) => {
   const [isWishlistClicked, setIsWishlistClicked] = useState(false);
   const [isSeenlistClicked, setIsSeenlistClicked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const videoUrl = `https://api.themoviedb.org/3/movie/${
-  //   movie.id
-  // }/videos?api_key=9f856681c9163f666d3789c63c4b482e&language=en-US`;
-  const storeData = async (key, value) => {
-    try {
-      await AsyncStorage.setItem(key, value);
-    } catch (error) {
-      return error;
-    }
-  };
+  const [movieCast, setMovieCast] = useState([]);
+  const [movieDirector, setMovieDirector] = useState('');
+  const [recommennedMovies, setRecommennedMovies] = useState([]);
 
-  const removeData = async (key, value) => {
-    try {
-      await AsyncStorage.removeItem(key, value);
-    } catch (error) {
-      return error;
-    }
-  };
   const handleWishlist = async () => {
     setIsWishlistClicked(!isWishlistClicked);
     if (!isWishlistClicked) {
       setIsSeenlistClicked(false);
-      await storeData('wishlist', movie.id.toString());
-      // await removeData('seenlist');
-      // } else {
-      // await removeData('wishlist');
     }
   };
 
@@ -70,10 +56,6 @@ const MovieDetail = ({ route, navigation }) => {
     setIsSeenlistClicked(!isSeenlistClicked);
     if (!isSeenlistClicked) {
       setIsWishlistClicked(false);
-      await storeData('seenlist', movie.id.toString());
-      // await removeData('wishlist');
-      // } else {
-      // await removeData('seenlist');
     }
   };
 
@@ -103,6 +85,12 @@ const MovieDetail = ({ route, navigation }) => {
     );
 
   useEffect(() => {
+    getCast(movie.id).then(cast => setMovieCast(cast));
+    getDirector(movie.id).then(director => setMovieDirector(director[0].name));
+    getRecommendedMovies(movie.id).then(movies => setRecommennedMovies(movies));
+  }, [movie.id]);
+
+  useEffect(() => {
     getMovieDetail(movie.id).then(detail => {
       setMovieDetail(detail);
       setGenres(detail.genres);
@@ -110,28 +98,21 @@ const MovieDetail = ({ route, navigation }) => {
     });
   }, [movie.id]);
 
-  // useEffect(() => {
-  //   const getVideo = async () => {
-  //     const result = await fetch(videoUrl);
-  //     const res = await result.json();
-  //     setVideoId(res.results[0].key);
-  //   };
-  //   getVideo();
-  // }, [videoUrl]);
+  useEffect(() => {
+    const getVideo = async () => {
+      const result = await fetch(videoUrl(movie.id));
+      const res = await result.json();
+      setVideoId(res.results[0].key);
+    };
+    getVideo();
+  }, [movie.id]);
 
   return (
-    <ScrollView>
-      <StatusBar barStyle="light-content" />
+    <React.Fragment>
       {isLoading ? (
-        <ActivityIndicator size="large" />
+        <ActivityIndicator style={{ flex: 1 }} size="large" />
       ) : (
         <View style={styles.container}>
-          {/* <YouTube
-        apiKey={'AIzaSyDiMl-ZHJQ-1vnvJH00Q6kYwOuk3kcX3vk'}
-        videoId={videoId}
-        style={styles.youtube}
-        fullscreen
-      /> */}
           <TouchableWithoutFeedback onPress={() => setIsBlur(!isBlur)}>
             <Image
               style={styles.backdropImage}
@@ -174,17 +155,22 @@ const MovieDetail = ({ route, navigation }) => {
           </ScrollView>
 
           {/* Bottom */}
-          <View style={styles.detailContainer}>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 300 }}
+            style={styles.detailContainer}>
             <View style={styles.detailTopContainer}>
               <View style={styles.imageContainer}>
                 <Image
                   style={styles.image}
                   resizeMode="cover"
-                  source={{ uri: `${baseImageUrl}${movieDetail.poster_path}` }}
+                  source={{
+                    uri: `${baseImageUrl}${movieDetail.poster_path}`,
+                  }}
                 />
               </View>
               <View style={styles.listButtonContainer}>
                 <View style={{ flexDirection: 'row' }}>
+                  {/* Wishlist Button */}
                   <TouchableOpacity
                     onPress={() => handleWishlist()}
                     style={[
@@ -212,7 +198,7 @@ const MovieDetail = ({ route, navigation }) => {
                       {isWishlistClicked ? 'In wishlist' : 'Wishlist'}
                     </Text>
                   </TouchableOpacity>
-
+                  {/* Seenlist button*/}
                   <TouchableOpacity
                     onPress={() => handleSeenlist()}
                     style={[
@@ -243,6 +229,7 @@ const MovieDetail = ({ route, navigation }) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
+                {/* Custom list Button */}
                 <TouchableOpacity
                   onPress={() => handleCustomlist()}
                   style={[styles.listButtons, styles.customList]}>
@@ -258,7 +245,8 @@ const MovieDetail = ({ route, navigation }) => {
             </View>
             <View style={styles.itemSeperator} />
             <View style={styles.subContainer}>
-              <Text bold style={styles.overviewHeaderText}>
+              {/* Overview */}
+              <Text bold style={styles.subTitle}>
                 Overview:
               </Text>
               <Text
@@ -274,8 +262,124 @@ const MovieDetail = ({ route, navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+
+            {/* Cast */}
             <View style={styles.itemSeperator} />
-          </View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text bold style={styles.subTitle}>
+                Cast
+              </Text>
+              <TouchableOpacity>
+                <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>
+                  See all
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView
+              style={{ marginBottom: 4 }}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
+              {movieCast.map((cast, index) => (
+                <TouchableOpacity key={index} style={styles.imageButton}>
+                  {cast.profile_path ? (
+                    <Image
+                      source={{ uri: `${baseImageUrl}${cast.profile_path}` }}
+                      style={styles.smallImage}
+                    />
+                  ) : (
+                    <Image style={styles.smallNoImage} />
+                  )}
+                  <Text numberOfLines={1} style={styles.nameText}>
+                    {cast.name}
+                  </Text>
+                  <Text numberOfLines={1} style={styles.characterText}>
+                    {cast.character}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <View style={styles.itemSeperator} />
+            {/* DIRECTOR */}
+            <TouchableOpacity style={styles.directorButton}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text>Director</Text>
+                <Text style={styles.directorText}>{`${movieDirector}`}</Text>
+              </View>
+              <Ionicons
+                style={styles.goBackIcon}
+                name="ios-arrow-forward"
+                size={14}
+                color={colors.gray}
+              />
+            </TouchableOpacity>
+            {/* RECOMMENNED MOVIES */}
+            <View style={styles.itemSeperator} />
+            <View style={{ flexDirection: 'row', marginTop: 4 }}>
+              <Text bold style={styles.subTitle}>
+                Recommenned Movies
+              </Text>
+              <TouchableOpacity>
+                <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>
+                  See all
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {recommennedMovies.map((recommennedMovie, index) => (
+                <TouchableOpacity key={index} style={styles.imageButton}>
+                  {recommennedMovie.poster_path ? (
+                    <Image
+                      source={{
+                        uri: `${baseImageUrl}${recommennedMovie.poster_path}`,
+                      }}
+                      style={styles.smallImage}
+                    />
+                  ) : (
+                    <Image style={styles.smallNoImage} />
+                  )}
+                  <Text numberOfLines={1} style={styles.nameText}>
+                    {movie.title}
+                  </Text>
+                  <AnimatedCircularProgress
+                    style={{ marginTop: 4 }}
+                    size={30}
+                    width={2}
+                    dashedTint={{ width: 2, gap: 2 }}
+                    dashedBackground={{ width: 2, gap: 2 }}
+                    fill={recommennedMovie.vote_average * 10}
+                    tintColor={
+                      recommennedMovie.vote_average > 7
+                        ? colors.green
+                        : colors.gold
+                    }
+                    backgroundColor={
+                      recommennedMovie.vote_average > 7
+                        ? colors.lightGreen
+                        : colors.lightGold
+                    }>
+                    {fill => (
+                      <Text
+                        style={{
+                          fontSize: 10,
+                        }}>{`${recommennedMovie.vote_average * 10}%`}</Text>
+                    )}
+                  </AnimatedCircularProgress>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <View style={styles.itemSeperator} />
+            {/* Trailer */}
+            <Text bold style={styles.subTitle}>
+              Trailer
+            </Text>
+            <YouTube
+              apiKey={youtubeApiKey}
+              videoId={videoId}
+              style={styles.youtube}
+              fullscreen
+            />
+            <Text />
+          </ScrollView>
         </View>
       )}
       <View>
@@ -288,7 +392,7 @@ const MovieDetail = ({ route, navigation }) => {
           </View>
         </Modal>
       </View>
-    </ScrollView>
+    </React.Fragment>
   );
 };
 
@@ -298,13 +402,13 @@ const styles = StyleSheet.create({
   },
   youtube: {
     height: 240,
-    width: 240,
+    width: '100%',
   },
   subContainer: {
     marginTop: 0,
     paddingRight: 10,
   },
-  overviewHeaderText: {
+  subTitle: {
     marginBottom: 10,
     fontFamily: 'Fjalla One',
     fontSize: 16,
@@ -327,6 +431,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     bottom: 120,
     marginLeft: 20,
+    height: 44,
   },
   genreButton: {
     borderRadius: 14,
@@ -429,6 +534,39 @@ const styles = StyleSheet.create({
   },
   seenlistText: {
     fontSize: 16,
+  },
+  imageButton: {
+    marginRight: 8,
+    alignItems: 'center',
+    width: 100,
+  },
+  directorButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  directorText: {
+    color: colors.gray,
+    marginLeft: 10,
+  },
+  nameText: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  smallImage: {
+    width: 75,
+    height: 100,
+    borderRadius: 8,
+  },
+  smallNoImage: {
+    width: 75,
+    height: 100,
+    borderRadius: 8,
+    backgroundColor: colors.lightGray,
+  },
+  characterText: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: colors.gray,
   },
 });
 

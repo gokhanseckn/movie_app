@@ -1,6 +1,10 @@
 # Movie App
 
-Movie app is an application that uses the TMDB API and is built with React Native.
+Movie app is an application that uses the [TMDB API](https://www.themoviedb.org/?language=en-US) and is built with React Native.
 
-<img src="./src/assets/home.png" width="48%" style="margin-right:10px;">
-<img src="./src/assets/search.png" width="48%">
+The app's design is based on [Thomas' app](https://github.com/Dimillian/MovieSwiftUI) which is written in SwiftUI.
+
+<img src="./src/assets/home.png" width=290>
+<img src="./src/assets/search.png" width=290>
+<img src="./src/assets/detail_1.png" width=290>
+<img src="./src/assets/detail_2.png" width=290>
