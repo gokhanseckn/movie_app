@@ -11,8 +11,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Movies from '../src/views/movies';
 import MovieDetail from '../src/views/movieDetail';
 import SeeAllPage from '../src/views/seeAllPage';
+import PersonDetail from '../src/views/personDetail';
 import Discover from '../src/views/discover';
 import MyList from '../src/views/myList';
+import GenreMovieList from '../src/views/genreMovieList';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors } from './theme/color';
 
@@ -38,6 +40,20 @@ const MovieStack = () => (
     <Stack.Screen
       name="SeeAllPage"
       component={SeeAllPage}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="PersonDetail"
+      component={PersonDetail}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="GenreMovieList"
+      component={GenreMovieList}
       options={({ route }) => ({
         headerShown: false,
       })}

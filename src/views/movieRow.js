@@ -15,7 +15,7 @@ const MovieRow = ({ navigation, movie }) => (
   <TouchableOpacity
     style={styles.movieRowContainer}
     onPress={() =>
-      navigation.navigate('MovieDetail', {
+      navigation.push('MovieDetail', {
         headerTitle: movie.title,
         movie: movie,
       })

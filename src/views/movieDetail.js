@@ -132,7 +132,7 @@ const MovieDetail = ({ route, navigation }) => {
               color={colors.gold}
             />
             <Text bold style={styles.goBackText}>
-              Movies
+              Back
             </Text>
           </TouchableOpacity>
           <Text numberOfLines={1} style={styles.title}>
@@ -143,7 +143,15 @@ const MovieDetail = ({ route, navigation }) => {
             showsHorizontalScrollIndicator={false}
             style={styles.genreContainer}>
             {genres.map((genre, index) => (
-              <TouchableOpacity key={index} style={styles.genreButton}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.push('GenreMovieList', {
+                    genreId: genre.id,
+                    genreName: genre.name,
+                  })
+                }
+                key={index}
+                style={styles.genreButton}>
                 <Text style={styles.genreText}>{genre.name}</Text>
                 <Ionicons
                   style={styles.icon}
@@ -298,7 +306,7 @@ const MovieDetail = ({ route, navigation }) => {
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('SeeAllPage', {
+                  navigation.push('SeeAllPage', {
                     header: movieDetail.title,
                     cast: movieCast,
                     type: 'cast',
@@ -314,7 +322,12 @@ const MovieDetail = ({ route, navigation }) => {
               horizontal
               showsHorizontalScrollIndicator={false}>
               {movieCast.slice(0, 6).map((cast, index) => (
-                <TouchableOpacity key={index} style={styles.imageButton}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    navigation.push('PersonDetail', { person: cast })
+                  }
+                  style={styles.imageButton}>
                   {cast.profile_path ? (
                     <Image
                       source={{ uri: `${baseImageUrl}${cast.profile_path}` }}
@@ -354,7 +367,7 @@ const MovieDetail = ({ route, navigation }) => {
               </Text>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('SeeAllPage', {
+                  navigation.push('SeeAllPage', {
                     type: 'movie',
                     header: movie.title,
                     movie: recommennedMovies,
@@ -367,7 +380,15 @@ const MovieDetail = ({ route, navigation }) => {
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {recommennedMovies.slice(0, 4).map((recommennedMovie, index) => (
-                <TouchableOpacity key={index} style={styles.imageButton}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.push('MovieDetail', {
+                      headerTitle: recommennedMovie.title,
+                      movie: recommennedMovie,
+                    })
+                  }
+                  key={index}
+                  style={styles.imageButton}>
                   {recommennedMovie.poster_path ? (
                     <Image
                       source={{
@@ -379,7 +400,7 @@ const MovieDetail = ({ route, navigation }) => {
                     <Image style={styles.smallNoImage} />
                   )}
                   <Text numberOfLines={1} style={styles.nameText}>
-                    {movie.title}
+                    {recommennedMovie.title}
                   </Text>
                   <AnimatedCircularProgress
                     style={{ marginTop: 4 }}
@@ -582,6 +603,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   directorButton: {
+    marginVertical: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

@@ -20,12 +20,7 @@ const seeAllPage = ({ navigation, route }) => {
       <TouchableOpacity
         style={styles.goBackButton}
         onPress={() => navigation.goBack()}>
-        <Ionicons
-          style={styles.goBackIcon}
-          name="ios-arrow-back"
-          size={30}
-          color={colors.gold}
-        />
+        <Ionicons name="ios-arrow-back" size={30} color={colors.gold} />
         <Text style={styles.header}>{header}</Text>
       </TouchableOpacity>
       {type === 'cast' && (
@@ -34,7 +29,9 @@ const seeAllPage = ({ navigation, route }) => {
           contentContainerStyle={styles.flatListContentContainer}
           data={cast}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.castContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.push('PersonDetail', { person: item })}
+              style={styles.castContainer}>
               {item.profile_path ? (
                 <Image
                   style={styles.image}
