@@ -3,11 +3,9 @@ import React, { useState, useEffect } from 'react';
 import {
   ActionSheetIOS,
   ActivityIndicator,
-  Dimensions,
   Image,
   Modal,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -26,9 +24,8 @@ import {
 } from '../networkManager';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import styles from '../assets/styles/index';
 import { colors } from '../theme/color';
-
-const isIphoneX = Dimensions.get('window').height >= 812;
 
 const MovieDetail = ({ route, navigation }) => {
   const { movie } = route.params;
@@ -108,40 +105,28 @@ const MovieDetail = ({ route, navigation }) => {
   }, [movie.id]);
 
   return (
-    <React.Fragment>
+    <View>
       {isLoading ? (
-        <ActivityIndicator style={{ flex: 1 }} size="large" />
+        <ActivityIndicator style={styles.flex} size="large" />
       ) : (
-        <View style={styles.container}>
+        <React.Fragment>
           <TouchableWithoutFeedback onPress={() => setIsBlur(!isBlur)}>
             <Image
-              style={styles.backdropImage}
-              source={{
-                uri: `${baseBackdropImageUrl}${movie.backdrop_path}`,
-              }}
+              style={styles.movieDetailBackdropImage}
+              source={{ uri: `${baseBackdropImageUrl}${movie.backdrop_path}` }}
               blurRadius={isBlur ? 50 : 0}
             />
           </TouchableWithoutFeedback>
-          <TouchableOpacity
-            style={styles.goBackContainer}
-            onPress={() => navigation.goBack()}>
-            <Ionicons
-              style={styles.goBackIcon}
-              name="ios-arrow-back"
-              size={24}
-              color={colors.gold}
-            />
-            <Text bold style={styles.goBackText}>
+          <TouchableOpacity style={styles.customGoBackButton} onPress={() => navigation.goBack()}>
+            <Ionicons style={styles.customGoBackIcon} name="ios-arrow-back" size={24} color={colors.gold} />
+            <Text bold style={styles.customGoBackText}>
               Back
             </Text>
           </TouchableOpacity>
-          <Text numberOfLines={1} style={styles.title}>
+          <Text numberOfLines={1} style={styles.movieDetailMovieTitle}>
             {movieDetail.title}
           </Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.genreContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.movieDetailGenreContainer}>
             {genres.map((genre, index) => (
               <TouchableOpacity
                 onPress={() =>
@@ -151,156 +136,93 @@ const MovieDetail = ({ route, navigation }) => {
                   })
                 }
                 key={index}
-                style={styles.genreButton}>
-                <Text style={styles.genreText}>{genre.name}</Text>
-                <Ionicons
-                  style={styles.icon}
-                  name="ios-arrow-forward"
-                  size={14}
-                />
+                style={styles.movieDetailGenreButton}>
+                <Text style={styles.movieDetailGenreText}>{genre.name}</Text>
+                <Ionicons style={styles.movieDetailGenreIcon} name="ios-arrow-forward" size={14} />
               </TouchableOpacity>
             ))}
           </ScrollView>
-
-          {/* Bottom */}
-          <ScrollView
-            contentContainerStyle={{ paddingBottom: 300 }}
-            style={styles.detailContainer}>
-            <View style={styles.detailTopContainer}>
-              <View style={styles.imageContainer}>
+          <ScrollView style={styles.movieDetailContainer} contentContainerStyle={{ paddingBottom: 280 }}>
+            <View style={styles.flexRow}>
+              <View style={styles.imageContainerShadow}>
                 <Image
-                  style={styles.image}
+                  style={styles.movieDetailImage}
                   resizeMode="cover"
-                  source={{
-                    uri: `${baseImageUrl}${movieDetail.poster_path}`,
-                  }}
+                  source={{ uri: `${baseImageUrl}${movieDetail.poster_path}` }}
                 />
               </View>
-              <View style={styles.listButtonContainer}>
-                <View style={{ flexDirection: 'row' }}>
-                  {/* Wishlist Button */}
+              <View style={styles.movieDetailListButtonContainer}>
+                <View style={styles.flexRow}>
                   <TouchableOpacity
                     onPress={() => handleWishlist()}
                     style={[
-                      styles.listButtons,
-                      styles.wishlist,
-                      {
-                        backgroundColor: isWishlistClicked
-                          ? colors.red
-                          : colors.transparent,
-                      },
+                      styles.movieDetailListButton,
+                      styles.borderRed,
+                      { backgroundColor: isWishlistClicked ? colors.red : colors.transparent },
                     ]}>
                     <Ionicons
-                      style={styles.listIcons}
+                      style={styles.movieDetailListButtonIcon}
                       name="ios-heart-empty"
                       color={!isWishlistClicked ? colors.red : colors.white}
                       size={20}
                     />
-                    <Text
-                      style={[
-                        styles.wishlistText,
-                        {
-                          color: isWishlistClicked ? colors.white : colors.red,
-                        },
-                      ]}>
+                    <Text style={[styles.fontSize16, { color: isWishlistClicked ? colors.white : colors.red }]}>
                       {isWishlistClicked ? 'In wishlist' : 'Wishlist'}
                     </Text>
                   </TouchableOpacity>
-                  {/* Seenlist button*/}
                   <TouchableOpacity
                     onPress={() => handleSeenlist()}
                     style={[
-                      styles.listButtons,
-                      styles.seenlist,
-                      {
-                        backgroundColor: isSeenlistClicked
-                          ? colors.green
-                          : colors.transparent,
-                      },
+                      styles.movieDetailListButton,
+                      styles.borderGreen,
+                      { backgroundColor: isSeenlistClicked ? colors.green : colors.transparent },
                     ]}>
                     <Ionicons
-                      style={styles.listIcons}
+                      style={styles.movieDetailListButtonIcon}
                       name="ios-eye"
                       color={!isSeenlistClicked ? colors.green : colors.white}
                       size={20}
                     />
-                    <Text
-                      style={[
-                        styles.seenlistText,
-                        {
-                          color: isSeenlistClicked
-                            ? colors.white
-                            : colors.green,
-                        },
-                      ]}>
+                    <Text style={[styles.fontSize16, { color: isSeenlistClicked ? colors.white : colors.green }]}>
                       {isSeenlistClicked ? 'Seen' : 'Seenlist'}
                     </Text>
                   </TouchableOpacity>
                 </View>
-                {/* Custom list Button */}
                 <TouchableOpacity
                   onPress={() => handleCustomlist()}
-                  style={[styles.listButtons, styles.customList]}>
-                  <Ionicons
-                    style={styles.listIcons}
-                    name="ios-list"
-                    color={colors.gold}
-                    size={20}
-                  />
-                  <Text style={styles.customlistText}>Add to custom list</Text>
+                  style={[styles.movieDetailListButton, styles.borderGold, { width: '60%' }]}>
+                  <Ionicons style={styles.movieDetailListButtonIcon} name="ios-list" color={colors.gold} size={20} />
+                  <Text style={(styles.fontSize16, { color: colors.gold })}>Add to custom list</Text>
                 </TouchableOpacity>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={[styles.flexRow, styles.alignItemsCenter]}>
                   <AnimatedCircularProgress
                     size={36}
                     width={3}
                     dashedTint={{ width: 2, gap: 2 }}
                     dashedBackground={{ width: 2, gap: 2 }}
                     fill={movieDetail.vote_average * 10}
-                    tintColor={
-                      movieDetail.vote_average > 7 ? colors.green : colors.gold
-                    }
-                    backgroundColor={
-                      movieDetail.vote_average > 7
-                        ? colors.lightGreen
-                        : colors.lightGold
-                    }>
-                    {fill => (
-                      <Text
-                        style={
-                          styles.voteAverage
-                        }>{`${movieDetail.vote_average * 10}%`}</Text>
-                    )}
+                    tintColor={movieDetail.vote_average > 7 ? colors.green : colors.gold}
+                    backgroundColor={movieDetail.vote_average > 7 ? colors.lightGreen : colors.lightGold}>
+                    {fill => <Text style={styles.voteAverageText}>{`${movieDetail.vote_average * 10}%`}</Text>}
                   </AnimatedCircularProgress>
-                  <Text
-                    style={{
-                      marginLeft: 6,
-                    }}>{`${movieDetail.vote_count} Ratings`}</Text>
+                  <Text style={styles.movieDetailRatingsText}>{`${movieDetail.vote_count} Ratings`}</Text>
                 </View>
               </View>
             </View>
             <View style={styles.itemSeperator} />
-            <View style={styles.subContainer}>
-              {/* Overview */}
+            <View>
               <Text bold style={styles.subTitle}>
                 Overview:
               </Text>
-              <Text
-                numberOfLines={!isReadMoreClicked && 3}
-                style={styles.overviewText}>
+              <Text numberOfLines={!isReadMoreClicked && 3} style={styles.movieDetailOverViewText}>
                 {movieDetail.overview}
               </Text>
-              <TouchableOpacity
-                style={styles.readMoreButton}
-                onPress={() => setIsReadMoreClicked(!isReadMoreClicked)}>
-                <Text style={styles.readMoreButtonText}>
-                  {isReadMoreClicked ? 'Less' : 'Read More'}
-                </Text>
+              <TouchableOpacity style={styles.readMoreButton} onPress={() => setIsReadMoreClicked(!isReadMoreClicked)}>
+                <Text style={styles.readMoreButtonText}>{isReadMoreClicked ? 'Less' : 'Read More'}</Text>
               </TouchableOpacity>
             </View>
-
-            {/* Cast */}
             <View style={styles.itemSeperator} />
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles.flexRow}>
               <Text bold style={styles.subTitle}>
                 Cast
               </Text>
@@ -312,56 +234,39 @@ const MovieDetail = ({ route, navigation }) => {
                     type: 'cast',
                   })
                 }>
-                <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>
-                  See all
-                </Text>
+                <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>See all</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView
-              style={{ marginBottom: 4 }}
-              horizontal
-              showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {movieCast.slice(0, 6).map((cast, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() =>
-                    navigation.push('PersonDetail', { person: cast })
-                  }
-                  style={styles.imageButton}>
+                  onPress={() => navigation.push('PersonDetail', { person: cast })}
+                  style={styles.movieDetailImageButton}>
                   {cast.profile_path ? (
-                    <Image
-                      source={{ uri: `${baseImageUrl}${cast.profile_path}` }}
-                      style={styles.smallImage}
-                    />
+                    <Image source={{ uri: `${baseImageUrl}${cast.profile_path}` }} style={styles.smallImage} />
                   ) : (
                     <Image style={styles.smallNoImage} />
                   )}
-                  <Text numberOfLines={1} style={styles.nameText}>
+                  <Text numberOfLines={1} style={styles.movieDetailNameText}>
                     {cast.name}
                   </Text>
-                  <Text numberOfLines={1} style={styles.characterText}>
+                  <Text numberOfLines={1} style={styles.movieDetailCharacterText}>
                     {cast.character}
                   </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
             <View style={styles.itemSeperator} />
-            {/* DIRECTOR */}
-            <TouchableOpacity style={styles.directorButton}>
-              <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity style={styles.movieDetailDirectorButton}>
+              <View style={styles.flexRow}>
                 <Text>Director</Text>
-                <Text style={styles.directorText}>{`${movieDirector}`}</Text>
+                <Text style={styles.movieDetailDirectorNameText}>{movieDirector}</Text>
               </View>
-              <Ionicons
-                style={styles.goBackIcon}
-                name="ios-arrow-forward"
-                size={14}
-                color={colors.gray}
-              />
+              <Ionicons style={styles.customGoBackIcon} name="ios-arrow-forward" size={14} color={colors.gray} />
             </TouchableOpacity>
-            {/* RECOMMENNED MOVIES */}
             <View style={styles.itemSeperator} />
-            <View style={{ flexDirection: 'row', marginTop: 4 }}>
+            <View style={[styles.flexRow, { marginTop: 4 }]}>
               <Text bold style={styles.subTitle}>
                 Recommenned Movies
               </Text>
@@ -373,9 +278,7 @@ const MovieDetail = ({ route, navigation }) => {
                     movie: recommennedMovies,
                   })
                 }>
-                <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>
-                  See all
-                </Text>
+                <Text style={[styles.readMoreButtonText, { marginLeft: 10 }]}>See all</Text>
               </TouchableOpacity>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -388,7 +291,7 @@ const MovieDetail = ({ route, navigation }) => {
                     })
                   }
                   key={index}
-                  style={styles.imageButton}>
+                  style={styles.movieDetailImageButton}>
                   {recommennedMovie.poster_path ? (
                     <Image
                       source={{
@@ -399,242 +302,41 @@ const MovieDetail = ({ route, navigation }) => {
                   ) : (
                     <Image style={styles.smallNoImage} />
                   )}
-                  <Text numberOfLines={1} style={styles.nameText}>
+                  <Text numberOfLines={1} style={styles.movieDetailNameText}>
                     {recommennedMovie.title}
                   </Text>
                   <AnimatedCircularProgress
                     style={{ marginTop: 4 }}
-                    size={30}
-                    width={2}
+                    size={28}
+                    width={1}
                     dashedTint={{ width: 2, gap: 2 }}
                     dashedBackground={{ width: 2, gap: 2 }}
                     fill={recommennedMovie.vote_average * 10}
-                    tintColor={
-                      recommennedMovie.vote_average > 7
-                        ? colors.green
-                        : colors.gold
-                    }
-                    backgroundColor={
-                      recommennedMovie.vote_average > 7
-                        ? colors.lightGreen
-                        : colors.lightGold
-                    }>
-                    {fill => (
-                      <Text
-                        style={{
-                          fontSize: 10,
-                        }}>{`${recommennedMovie.vote_average * 10}%`}</Text>
-                    )}
+                    tintColor={recommennedMovie.vote_average > 7 ? colors.green : colors.gold}
+                    backgroundColor={recommennedMovie.vote_average > 7 ? colors.lightGreen : colors.lightGold}>
+                    {fill => <Text style={styles.voteAverageText}>{`${recommennedMovie.vote_average * 10}%`}</Text>}
                   </AnimatedCircularProgress>
                 </TouchableOpacity>
               ))}
             </ScrollView>
             <View style={styles.itemSeperator} />
-            {/* Trailer */}
             <Text bold style={styles.subTitle}>
               Trailer
             </Text>
-            <YouTube
-              apiKey={youtubeApiKey}
-              videoId={videoId}
-              style={styles.youtube}
-              fullscreen
-            />
+            <YouTube apiKey={youtubeApiKey} videoId={videoId} style={styles.movieDetailYoutube} fullscreen />
             <Text />
           </ScrollView>
-        </View>
+        </React.Fragment>
       )}
       <View>
-        <Modal
-          animationType="slide"
-          visible={isModalVisible}
-          presentationStyle="pageSheet">
+        <Modal animationType="slide" visible={isModalVisible} presentationStyle="pageSheet">
           <View>
             <Text>TEST</Text>
           </View>
         </Modal>
       </View>
-    </React.Fragment>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.transparent,
-  },
-  youtube: {
-    height: 240,
-    width: '100%',
-  },
-  subContainer: {
-    marginTop: 0,
-    paddingRight: 10,
-  },
-  subTitle: {
-    marginBottom: 10,
-    fontFamily: 'Fjalla One',
-    fontSize: 16,
-  },
-  overviewText: {
-    color: colors.gray,
-    lineHeight: 20,
-    fontSize: 16,
-  },
-  backdropImage: {
-    width: '100%',
-    height: 250,
-  },
-  image: {
-    height: 150,
-    width: 100,
-    borderRadius: 8,
-  },
-  genreContainer: {
-    flexDirection: 'row',
-    bottom: 120,
-    marginLeft: 20,
-    height: 44,
-  },
-  genreButton: {
-    borderRadius: 14,
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-    marginRight: 8,
-    paddingHorizontal: 8,
-    height: 28,
-    alignItems: 'center',
-  },
-  genreText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-  },
-  icon: {
-    marginLeft: 8,
-  },
-  goBackContainer: {
-    top: isIphoneX ? -200 : -220,
-    marginLeft: 20,
-    width: 80,
-    flexDirection: 'row',
-  },
-  goBackIcon: {
-    fontWeight: 'bold',
-    marginRight: 6,
-    alignSelf: 'center',
-  },
-  goBackText: {
-    color: colors.gold,
-    fontSize: 18,
-    fontFamily: 'Fjalla One',
-  },
-  title: {
-    fontFamily: 'Fjalla One',
-    color: colors.gold,
-    fontSize: 40,
-    bottom: isIphoneX ? 190 : 210,
-    marginLeft: 20,
-  },
-  detailContainer: {
-    bottom: 96,
-    paddingHorizontal: 10,
-  },
-  imageContainer: {
-    shadowColor: colors.black,
-    shadowOffset: { width: 2, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-  },
-  detailTopContainer: {
-    flexDirection: 'row',
-  },
-  itemSeperator: {
-    height: 1,
-    backgroundColor: colors.seperator,
-    marginVertical: 6,
-  },
-  readMoreButton: {
-    marginTop: 6,
-  },
-  readMoreButtonText: {
-    color: colors.lightBlue,
-    fontSize: 16,
-  },
-  listButtonContainer: {
-    marginLeft: 10,
-    justifyContent: 'space-around',
-    // height: 120,
-  },
-  listIcons: {
-    marginRight: 6,
-  },
-  listButtons: {
-    width: '40%',
-    flexDirection: 'row',
-    height: 34,
-    alignItems: 'center',
-    paddingHorizontal: 6,
-    marginHorizontal: 4,
-    borderWidth: 1,
-    borderRadius: 6,
-  },
-  customList: {
-    borderColor: colors.gold,
-    width: '60%',
-  },
-  wishlist: {
-    borderColor: colors.red,
-  },
-  seenlist: {
-    borderColor: colors.green,
-  },
-  customlistText: {
-    color: colors.gold,
-    fontSize: 16,
-  },
-  wishlistText: {
-    fontSize: 16,
-  },
-  seenlistText: {
-    fontSize: 16,
-  },
-  imageButton: {
-    marginRight: 8,
-    alignItems: 'center',
-    width: 100,
-  },
-  directorButton: {
-    marginVertical: 6,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  directorText: {
-    color: colors.gray,
-    marginLeft: 10,
-  },
-  nameText: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  smallImage: {
-    width: 75,
-    height: 100,
-    borderRadius: 8,
-  },
-  smallNoImage: {
-    width: 75,
-    height: 100,
-    borderRadius: 8,
-    backgroundColor: colors.lightGray,
-  },
-  characterText: {
-    fontSize: 12,
-    textAlign: 'center',
-    color: colors.gray,
-  },
-  voteAverage: {
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-});
 
 export default MovieDetail;

@@ -5,7 +5,6 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -18,6 +17,7 @@ import { baseImageUrl, getMovies, multiSearch } from '../networkManager';
 import { colors } from '../theme/color';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import styles from '../assets/styles/index';
 
 const Movies = ({ navigation }) => {
   const [header, setHeader] = useState('Popular');
@@ -79,16 +79,15 @@ const Movies = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.listHeader} bold>
+    <SafeAreaView style={styles.flex}>
+      <View style={styles.moviesContainer}>
+        <View style={styles.moviesHeaderContainer}>
+          <Text style={styles.moviesHeaderText} bold>
             {header}
           </Text>
           {!isSearching && (
             <Ionicons
               onPress={() => setIsMenuTypeList(!isMenuTypeList)}
-              style={{ paddingRight: 20 }}
               name={isMenuTypeList ? 'ios-photos' : 'ios-list'}
               size={24}
               color={colors.gold}
@@ -109,27 +108,18 @@ const Movies = ({ navigation }) => {
                 setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
               }}
             />
-            {isMenuTypeList ? (
+            {loading ? (
+              <ActivityIndicator style={styles.flex} size="large" />
+            ) : isMenuTypeList ? (
               <FlatList
                 data={movies}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.flatListContentContainer}
-                renderItem={({ item }) =>
-                  loading ? (
-                    <ActivityIndicator size="large" />
-                  ) : (
-                    <MovieRow navigation={navigation} movie={item} />
-                  )
-                }
-                ItemSeparatorComponent={() => (
-                  <View style={styles.itemSeperator} />
-                )}
+                renderItem={({ item }) => <MovieRow navigation={navigation} movie={item} />}
+                ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
                 keyExtractor={item => item.id.toString()}
               />
-            ) : loading ? (
-              <ActivityIndicator style={{ marginTop: 200 }} size="large" />
             ) : (
-              <ScrollView contentContainerStyle={styles.gridScrollView}>
+              <ScrollView contentContainerStyle={styles.moviesGridScrollView}>
                 {movies.map((movie, index) => (
                   <TouchableOpacity
                     onPress={() =>
@@ -139,31 +129,22 @@ const Movies = ({ navigation }) => {
                       })
                     }
                     key={index}
-                    style={styles.gridViewMovieButton}>
+                    style={[styles.moviesGridMovieButton, styles.imageContainerShadow]}>
                     <Image
                       resizeMode="stretch"
                       source={{ uri: `${baseImageUrl}${movie.poster_path}` }}
-                      style={styles.gridViewMovieImage}
+                      style={styles.moviesGridImage}
                     />
-                    <View style={styles.gridViewVoteContainer}>
+                    <View style={styles.moviesGridVoteContainer}>
                       <AnimatedCircularProgress
                         size={30}
                         width={2}
                         dashedTint={{ width: 2, gap: 2 }}
                         dashedBackground={{ width: 2, gap: 2 }}
                         fill={movie.vote_average * 10}
-                        tintColor={
-                          movie.vote_average > 7 ? colors.green : colors.gold
-                        }
-                        backgroundColor={
-                          movie.vote_average > 7
-                            ? colors.lightGreen
-                            : colors.lightGold
-                        }>
-                        {fill => (
-                          <Text style={styles.voteText}>{`${movie.vote_average *
-                            10}%`}</Text>
-                        )}
+                        tintColor={movie.vote_average > 7 ? colors.green : colors.gold}
+                        backgroundColor={movie.vote_average > 7 ? colors.lightGreen : colors.lightGold}>
+                        {fill => <Text style={styles.moviesGridVoteText}>{`${movie.vote_average * 10}%`}</Text>}
                       </AnimatedCircularProgress>
                     </View>
                     <Text numberOfLines={1}>{movie.title}</Text>
@@ -189,18 +170,10 @@ const Movies = ({ navigation }) => {
               <React.Fragment>
                 <FlatList
                   data={movies}
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={styles.flatListContentContainer}
                   renderItem={({ item }) =>
-                    loading ? (
-                      <ActivityIndicator size="large" />
-                    ) : (
-                      <MovieRow navigation={navigation} movie={item} />
-                    )
+                    loading ? <ActivityIndicator size="large" /> : <MovieRow navigation={navigation} movie={item} />
                   }
-                  ItemSeparatorComponent={() => (
-                    <View style={styles.itemSeperator} />
-                  )}
+                  ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
                   keyExtractor={item => item.id.toString()}
                 />
               </React.Fragment>
@@ -208,15 +181,9 @@ const Movies = ({ navigation }) => {
             {people.length > 0 && selectedSearchIndex === 1 && (
               <React.Fragment>
                 <FlatList
-                  contentContainerStyle={styles.flatListContentContainer}
                   data={people}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={({ item }) => (
-                    <PersonRow navigation={navigation} person={item} />
-                  )}
-                  ItemSeparatorComponent={() => (
-                    <View style={styles.itemSeperator} />
-                  )}
+                  renderItem={({ item }) => <PersonRow navigation={navigation} person={item} />}
+                  ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
                   keyExtractor={item => item.id.toString()}
                 />
               </React.Fragment>
@@ -227,72 +194,4 @@ const Movies = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    paddingLeft: 20,
-    paddingTop: 20,
-  },
-  flatListContentContainer: {
-    paddingBottom: 250,
-  },
-  segmentedControl: {
-    marginBottom: 10,
-    marginRight: 20,
-  },
-  itemSeperator: {
-    height: 1,
-    backgroundColor: colors.seperator,
-    marginVertical: 10,
-  },
-  listHeader: {
-    fontSize: 40,
-    marginBottom: 10,
-    fontFamily: 'Fjalla One',
-    color: colors.gold,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  gridScrollView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingBottom: 300,
-  },
-  gridViewMovieButton: {
-    marginTop: 10,
-    width: '28%',
-    height: 150,
-    borderRadius: 8,
-    marginHorizontal: 8,
-    marginBottom: 20,
-    shadowColor: colors.black,
-    shadowOffset: { width: 2, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    alignItems: 'center',
-  },
-  gridViewMovieImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 8,
-  },
-  gridViewVoteContainer: {
-    backgroundColor: '#081c23',
-    width: 30,
-    height: 30,
-    right: 0,
-    position: 'absolute',
-    top: -10,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  voteText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 10,
-  },
-});
 export default Movies;

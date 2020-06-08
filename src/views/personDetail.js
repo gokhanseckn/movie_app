@@ -1,24 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SegmentedControl from '@react-native-community/segmented-control';
 import { colors } from '../theme/color';
 import MovieRow from '../views/movieRow';
-import {
-  baseImageUrl,
-  getPersonDetail,
-  getPersonImages,
-  getMovieCreditForAPerson,
-} from '../networkManager';
+import { baseImageUrl, getPersonDetail, getPersonImages, getMovieCreditForAPerson } from '../networkManager';
+import styles from '../assets/styles/index';
 
 const PersonDetail = ({ navigation, route }) => {
   const { person } = route.params;
@@ -35,30 +22,23 @@ const PersonDetail = ({ navigation, route }) => {
   }, [person.id]);
 
   return (
-    <SafeAreaView>
-      <TouchableOpacity
-        style={styles.goBackButton}
-        onPress={() => navigation.goBack()}>
-        <Ionicons name="ios-arrow-back" size={30} color={colors.gold} />
-        <Text style={styles.header}>Back</Text>
+    <SafeAreaView style={styles.personDetailContainer}>
+      <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
+        <Ionicons style={styles.customGoBackIcon} name="ios-arrow-back" size={30} color={colors.gold} />
+        <Text style={styles.customGoBackText}>Back</Text>
       </TouchableOpacity>
-      <View style={styles.container}>
-        <Text style={styles.name}>{personDetail.name}</Text>
+      <React.Fragment>
+        <Text style={styles.customHeaderText}>{personDetail.name}</Text>
         <View style={styles.itemSeperator} />
-        <View style={styles.imageContainer}>
+        <View style={styles.flexRow}>
           {personDetail.profile_path ? (
-            <Image
-              style={styles.image}
-              source={{ uri: `${baseImageUrl}${personDetail.profile_path}` }}
-            />
+            <Image style={styles.movieRowImage} source={{ uri: `${baseImageUrl}${personDetail.profile_path}` }} />
           ) : (
-            <Image style={styles.noImage} />
+            <Image style={styles.movieRowNoImage} />
           )}
-          <View style={styles.textContainer}>
+          <View style={[styles.justifyCenter, { marginLeft: 20 }]}>
             <Text style={styles.subTitle}>Known for</Text>
-            <Text style={styles.departmentText}>
-              {personDetail.known_for_department}
-            </Text>
+            <Text style={styles.personDetailDepartmentText}>{personDetail.known_for_department}</Text>
           </View>
         </View>
         <SegmentedControl
@@ -73,34 +53,24 @@ const PersonDetail = ({ navigation, route }) => {
           }}
         />
         {selectedIndex === 0 && (
-          <ScrollView contentContainerStyle={{ paddingBottom: 580 }}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.itemSeperator} />
             <Text style={styles.subTitle}>Biography</Text>
-            <Text
-              numberOfLines={!isReadMoreClicked && 4}
-              style={styles.descriptionText}>
+            <Text numberOfLines={!isReadMoreClicked && 4} style={styles.personDetailDescText}>
               {personDetail.biography}
             </Text>
-            <TouchableOpacity
-              onPress={() => setIsReadMoreClicked(!isReadMoreClicked)}>
-              <Text style={styles.readMoreText}>
-                {isReadMoreClicked ? 'Less' : 'Read More'}
-              </Text>
+            <TouchableOpacity style={styles.readMoreButton} onPress={() => setIsReadMoreClicked(!isReadMoreClicked)}>
+              <Text style={styles.readMoreButtonText}>{isReadMoreClicked ? 'Less' : 'Read More'}</Text>
             </TouchableOpacity>
-            <Text style={styles.subTitle}>Place of birth</Text>
-            <Text style={styles.descriptionText}>
-              {personDetail.place_of_birth}
-            </Text>
+            <Text style={[styles.subTitle, { marginTop: 10 }]}>Place of birth</Text>
+            <Text style={styles.personDetailDescText}>{personDetail.place_of_birth}</Text>
             <View style={styles.itemSeperator} />
             <Text style={styles.subTitle}>Images</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={{ marginTop: 10 }}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
               {personImages.map((image, index) => (
                 <Image
                   key={index}
-                  style={styles.images}
+                  style={[styles.smallImage, { marginRight: 12 }]}
                   source={{ uri: `${baseImageUrl}${image.file_path}` }}
                 />
               ))}
@@ -113,112 +83,15 @@ const PersonDetail = ({ navigation, route }) => {
             <FlatList
               data={movieCredit}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.flatListContentContainer}
-              renderItem={({ item }) => (
-                <MovieRow navigation={navigation} movie={item} />
-              )}
-              ItemSeparatorComponent={() => (
-                <View style={styles.itemSeperator} />
-              )}
+              renderItem={({ item }) => <MovieRow navigation={navigation} movie={item} />}
+              ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
               keyExtractor={item => item.id.toString()}
             />
           </React.Fragment>
         )}
-      </View>
+      </React.Fragment>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  goBackButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginTop: 8,
-  },
-  header: {
-    color: colors.gold,
-    fontWeight: 'bold',
-    fontFamily: 'Fjalla One',
-    fontSize: 16,
-    marginLeft: 4,
-  },
-  container: {
-    paddingLeft: 20,
-    marginTop: 10,
-  },
-  name: {
-    fontFamily: 'Fjalla One',
-    color: colors.gold,
-    fontSize: 30,
-  },
-  itemSeperator: {
-    height: 1,
-    backgroundColor: colors.seperator,
-    marginVertical: 6,
-  },
-  imageContainer: {
-    flexDirection: 'row',
-  },
-  textContainer: {
-    marginLeft: 20,
-  },
-  image: {
-    height: 150,
-    width: 100,
-    borderRadius: 8,
-  },
-  noImage: {
-    height: 150,
-    width: 100,
-    borderRadius: 8,
-    backgroundColor: colors.lightGray,
-  },
-  subTitle: {
-    fontFamily: 'Fjalla One',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  departmentText: {
-    marginTop: 4,
-    fontSize: 16,
-  },
-  descriptionText: {
-    fontSize: 16,
-    color: colors.gray,
-    marginTop: 6,
-    paddingRight: 20,
-  },
-  readMoreText: {
-    fontSize: 16,
-    color: colors.lightBlue,
-    marginBottom: 10,
-  },
-  images: {
-    width: 75,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 20,
-  },
-  movieCreditContainer: {
-    marginBottom: 10,
-    flexDirection: 'row',
-  },
-  segmentedControl: {
-    marginRight: 20,
-    marginTop: 10,
-  },
-  section: {
-    backgroundColor: colors.lightGray,
-    height: 30,
-    justifyContent: 'center',
-    paddingLeft: 20,
-  },
-  sectionText: {
-    fontWeight: '600',
-    fontSize: 16,
-    fontFamily: 'Fjalla One',
-  },
-});
 
 export default PersonDetail;
