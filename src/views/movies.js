@@ -20,6 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const Movies = ({ navigation }) => {
+  const [header, setHeader] = useState('Popular');
   const [movies, setMovies] = useState([]);
   const [people, setPeople] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -33,15 +34,19 @@ const Movies = ({ navigation }) => {
     switch (selectedIndex) {
       case 0:
         setEndpoint('/movie/popular');
+        setHeader('Popular');
         break;
       case 1:
         setEndpoint('/movie/top_rated');
+        setHeader('Top Rated');
         break;
       case 2:
         setEndpoint('/movie/upcoming');
+        setHeader('Upcoming');
         break;
       case 3:
         setEndpoint('/movie/now_playing');
+        setHeader('Now Playing');
         break;
     }
   }, [selectedIndex]);
@@ -78,7 +83,7 @@ const Movies = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.listHeader} bold>
-            Movies
+            {header}
           </Text>
           {!isSearching && (
             <Ionicons

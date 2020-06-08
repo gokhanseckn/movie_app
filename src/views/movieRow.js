@@ -38,8 +38,8 @@ const MovieRow = ({ navigation, movie }) => (
         </Text>
         <View style={styles.voteContainer}>
           <AnimatedCircularProgress
-            size={40}
-            width={3}
+            size={36}
+            width={1}
             dashedTint={{ width: 2, gap: 2 }}
             dashedBackground={{ width: 2, gap: 2 }}
             fill={movie.vote_average * 10}
