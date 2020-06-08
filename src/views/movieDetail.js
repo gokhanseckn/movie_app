@@ -142,7 +142,10 @@ const MovieDetail = ({ route, navigation }) => {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          <ScrollView style={styles.movieDetailContainer} contentContainerStyle={{ paddingBottom: 280 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.movieDetailContainer}
+            contentContainerStyle={{ paddingBottom: 280 }}>
             <View style={styles.flexRow}>
               <View style={styles.imageContainerShadow}>
                 <Image

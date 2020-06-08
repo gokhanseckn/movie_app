@@ -16,6 +16,7 @@ const seeAllPage = ({ navigation, route }) => {
       </TouchableOpacity>
       {type === 'cast' && (
         <FlatList
+          showsVerticalScrollIndicator={false}
           style={styles.seeAllList}
           data={cast}
           renderItem={({ item }) => (
@@ -46,7 +47,7 @@ const seeAllPage = ({ navigation, route }) => {
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={() => (
             <React.Fragment>
-              <Text style={styles.genreListHeaderText}>Recommenned Movies</Text>
+              <Text style={styles.customHeaderText}>Recommenned Movies</Text>
               <View style={styles.itemSeperator} />
             </React.Fragment>
           )}

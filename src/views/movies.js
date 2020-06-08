@@ -119,7 +119,7 @@ const Movies = ({ navigation }) => {
                 keyExtractor={item => item.id.toString()}
               />
             ) : (
-              <ScrollView contentContainerStyle={styles.moviesGridScrollView}>
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.moviesGridScrollView}>
                 {movies.map((movie, index) => (
                   <TouchableOpacity
                     onPress={() =>
