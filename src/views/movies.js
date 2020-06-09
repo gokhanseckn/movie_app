@@ -13,7 +13,7 @@ import SegmentedControl from '@react-native-community/segmented-control';
 import MovieRow from '../views/movieRow';
 import PersonRow from '../views/personRow';
 import SearchBar from '../components/searchBar';
-import { baseImageUrl, getMovies, multiSearch } from '../networkManager';
+import { baseImageUrl, getGenres, getMovies, multiSearch } from '../networkManager';
 import { colors } from '../theme/color';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -22,6 +22,7 @@ import styles from '../assets/styles/index';
 const Movies = ({ navigation }) => {
   const [header, setHeader] = useState('Popular');
   const [movies, setMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
   const [people, setPeople] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,6 +48,10 @@ const Movies = ({ navigation }) => {
       case 3:
         setEndpoint('/movie/now_playing');
         setHeader('Now Playing');
+        break;
+      case 4:
+        getGenres().then(result => setGenres(result));
+        setHeader('Genres');
         break;
     }
   }, [selectedIndex]);
@@ -102,7 +107,7 @@ const Movies = ({ navigation }) => {
               textColor={colors.black}
               activeTextColor={colors.white}
               style={styles.segmentedControl}
-              values={['Popular', 'Top Rated', 'Upcoming', 'Now Playing']}
+              values={['Popular', 'Top Rated', 'Upcoming', 'Now Playing', 'Genres']}
               selectedIndex={selectedIndex}
               onChange={event => {
                 setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
@@ -111,13 +116,40 @@ const Movies = ({ navigation }) => {
             {loading ? (
               <ActivityIndicator style={styles.flex} size="large" />
             ) : isMenuTypeList ? (
-              <FlatList
-                data={movies}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => <MovieRow navigation={navigation} movie={item} />}
-                ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
-                keyExtractor={item => item.id.toString()}
-              />
+              selectedIndex === 4 ? (
+                <FlatList
+                  data={genres}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.moviesGenreButton}
+                      onPress={() =>
+                        navigation.push('GenreMovieList', {
+                          genreId: item.id,
+                          genreName: item.name,
+                        })
+                      }>
+                      <Text>{item.name}</Text>
+                      <Ionicons
+                        onPress={() => setIsMenuTypeList(!isMenuTypeList)}
+                        name={'ios-arrow-forward'}
+                        size={18}
+                        color={colors.gray}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
+                  keyExtractor={item => item.id.toString()}
+                />
+              ) : (
+                <FlatList
+                  data={movies}
+                  showsVerticalScrollIndicator={false}
+                  renderItem={({ item }) => <MovieRow navigation={navigation} movie={item} />}
+                  ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
+                  keyExtractor={item => item.id.toString()}
+                />
+              )
             ) : (
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.moviesGridScrollView}>
                 {movies.map((movie, index) => (

@@ -150,6 +150,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 10,
   },
+  moviesGenreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   // movieRow
   movieRowImage: {
     width: 100,
