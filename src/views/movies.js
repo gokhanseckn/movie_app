@@ -115,41 +115,39 @@ const Movies = ({ navigation }) => {
             />
             {loading ? (
               <ActivityIndicator style={styles.flex} size="large" />
+            ) : selectedIndex === 4 ? (
+              <FlatList
+                data={genres}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.moviesGenreButton}
+                    onPress={() =>
+                      navigation.push('GenreMovieList', {
+                        genreId: item.id,
+                        genreName: item.name,
+                      })
+                    }>
+                    <Text>{item.name}</Text>
+                    <Ionicons
+                      onPress={() => setIsMenuTypeList(!isMenuTypeList)}
+                      name={'ios-arrow-forward'}
+                      size={18}
+                      color={colors.gray}
+                    />
+                  </TouchableOpacity>
+                )}
+                ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
+                keyExtractor={item => item.id.toString()}
+              />
             ) : isMenuTypeList ? (
-              selectedIndex === 4 ? (
-                <FlatList
-                  data={genres}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.moviesGenreButton}
-                      onPress={() =>
-                        navigation.push('GenreMovieList', {
-                          genreId: item.id,
-                          genreName: item.name,
-                        })
-                      }>
-                      <Text>{item.name}</Text>
-                      <Ionicons
-                        onPress={() => setIsMenuTypeList(!isMenuTypeList)}
-                        name={'ios-arrow-forward'}
-                        size={18}
-                        color={colors.gray}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
-                  keyExtractor={item => item.id.toString()}
-                />
-              ) : (
-                <FlatList
-                  data={movies}
-                  showsVerticalScrollIndicator={false}
-                  renderItem={({ item }) => <MovieRow navigation={navigation} movie={item} />}
-                  ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
-                  keyExtractor={item => item.id.toString()}
-                />
-              )
+              <FlatList
+                data={movies}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => <MovieRow navigation={navigation} movie={item} />}
+                ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}
+                keyExtractor={item => item.id.toString()}
+              />
             ) : (
               <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.moviesGridScrollView}>
                 {movies.map((movie, index) => (
