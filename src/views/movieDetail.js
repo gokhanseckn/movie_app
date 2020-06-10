@@ -333,9 +333,7 @@ const MovieDetail = ({ route, navigation }) => {
       )}
       <View>
         <Modal animationType="slide" visible={isModalVisible} presentationStyle="pageSheet">
-          <View>
-            <Text>TEST</Text>
-          </View>
+          <Text>TEST</Text>
         </Modal>
       </View>
     </View>

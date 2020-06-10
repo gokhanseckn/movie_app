@@ -203,14 +203,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Fjalla One',
     color: colors.gold,
     fontSize: 40,
-    bottom: isIphoneX ? 190 : 210,
     marginLeft: 20,
+    bottom: isIphoneX ? 190 : 210,
   },
   movieDetailGenreContainer: {
     flexDirection: 'row',
-    bottom: 120,
     marginLeft: 20,
     height: 44,
+    bottom: 120,
   },
   movieDetailGenreButton: {
     borderRadius: 14,
@@ -229,8 +229,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   movieDetailContainer: {
-    bottom: 96,
     paddingHorizontal: 10,
+    bottom: 96,
   },
   movieDetailImage: {
     height: 150,
@@ -335,6 +335,49 @@ const styles = StyleSheet.create({
   personDetailDescText: {
     fontSize: 16,
     color: colors.gray,
+  },
+  //discover
+  discoverContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
+  discoverMovieButtonContainer: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    width: '100%',
+    height: '86%',
+  },
+  discoverMovieTitle: {
+    fontSize: 18,
+    marginVertical: 10,
+    fontFamily: 'Fjalla One',
+  },
+  discoverMovieImage: {
+    width: '100%%',
+    height: '100%',
+    borderRadius: 6,
+  },
+  discoverMovieReleaseDate: {
+    fontSize: 14,
+    marginVertical: 10,
+    fontFamily: 'Fjalla One',
+  },
+  discoverMovieRandomButton: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    borderColor: colors.lightBlue,
+    borderWidth: 1,
+    width: 140,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    borderRadius: 6,
+  },
+  discoverMovieRandomText: {
+    marginLeft: 10,
+    color: colors.lightBlue,
   },
 });
 

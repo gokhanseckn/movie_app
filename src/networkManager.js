@@ -80,3 +80,12 @@ export const getGenres = async () => {
   const res = await result.json();
   return res.genres;
 };
+
+export const discoverMovie = async genreId => {
+  const result = await fetch(
+    // `${baseUrl}/discover/movie?api_key=${apiKey}&language=${language}&page=${page}&with_genres=${genreId}`,
+    'https://api.themoviedb.org/3/discover/movie?api_key=9f856681c9163f666d3789c63c4b482e&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1',
+  );
+  const res = await result.json();
+  return res.results;
+};

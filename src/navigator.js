@@ -1,11 +1,6 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import { Appearance } from 'react-native';
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Movies from '../src/views/movies';
@@ -61,11 +56,49 @@ const MovieStack = () => (
   </Stack.Navigator>
 );
 
+const DiscoverStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Discover"
+      component={Discover}
+      options={() => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="MovieDetail"
+      component={MovieDetail}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="SeeAllPage"
+      component={SeeAllPage}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="PersonDetail"
+      component={PersonDetail}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+    <Stack.Screen
+      name="GenreMovieList"
+      component={GenreMovieList}
+      options={({ route }) => ({
+        headerShown: false,
+      })}
+    />
+  </Stack.Navigator>
+);
+
 const Navigator = () => {
-  const colorScheme = Appearance.getColorScheme();
   return (
-    <NavigationContainer
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer>
       <Tab.Navigator
         tabBarOptions={{ activeTintColor: colors.gold }}
         screenOptions={({ route }) => ({
@@ -82,7 +115,7 @@ const Navigator = () => {
           },
         })}>
         <Tab.Screen name="Movies" component={MovieStack} />
-        <Tab.Screen name="Discover" component={Discover} />
+        <Tab.Screen name="Discover" component={DiscoverStack} />
         <Tab.Screen name="My List" component={MyList} />
       </Tab.Navigator>
     </NavigationContainer>
