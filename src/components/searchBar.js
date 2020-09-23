@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    paddingVertical: 0,
   },
 });
 export default SearchBar;
