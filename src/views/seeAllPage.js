@@ -11,7 +11,7 @@ const seeAllPage = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.seeAllContainer}>
       <TouchableOpacity style={[styles.flexRow, styles.alignItemsCenter]} onPress={() => navigation.goBack()}>
-        <Ionicons name="ios-arrow-back" size={30} color={colors.gold} />
+        <Ionicons name="chevron-back" size={30} color={colors.gold} />
         <Text style={styles.seeAllHeaderText}>{header}</Text>
       </TouchableOpacity>
       {type === 'cast' && (
@@ -34,7 +34,7 @@ const seeAllPage = ({ navigation, route }) => {
                   <Text style={styles.seeAllCharacterText}>{item.character}</Text>
                 </View>
               </View>
-              <Ionicons name="ios-arrow-forward" size={18} color={colors.gray} />
+              <Ionicons name="chevron-forward" size={18} color={colors.gray} />
             </TouchableOpacity>
           )}
           ItemSeparatorComponent={() => <View style={styles.itemSeperator} />}

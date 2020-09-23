@@ -93,7 +93,7 @@ const Movies = ({ navigation }) => {
           {!isSearching && (
             <Ionicons
               onPress={() => setIsMenuTypeList(!isMenuTypeList)}
-              name={isMenuTypeList ? 'ios-photos' : 'ios-list'}
+              name={isMenuTypeList ? 'grid-sharp' : 'list'}
               size={24}
               color={colors.gold}
             />
@@ -131,7 +131,7 @@ const Movies = ({ navigation }) => {
                     <Text>{item.name}</Text>
                     <Ionicons
                       onPress={() => setIsMenuTypeList(!isMenuTypeList)}
-                      name={'ios-arrow-forward'}
+                      name={'chevron-forward'}
                       size={18}
                       color={colors.gray}
                     />

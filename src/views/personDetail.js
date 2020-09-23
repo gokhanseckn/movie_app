@@ -24,7 +24,7 @@ const PersonDetail = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.personDetailContainer}>
       <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
-        <Ionicons style={styles.customGoBackIcon} name="ios-arrow-back" size={30} color={colors.gold} />
+        <Ionicons style={styles.customGoBackIcon} name="chevron-back" size={30} color={colors.gold} />
         <Text style={styles.customGoBackText}>Back</Text>
       </TouchableOpacity>
       <React.Fragment>

@@ -17,7 +17,7 @@ const GenreMovieList = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.genreListContainer}>
       <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
-        <Ionicons style={styles.customGoBackIcon} name="ios-arrow-back" size={24} color={colors.gold} />
+        <Ionicons style={styles.customGoBackIcon} name="chevron-back" size={24} color={colors.gold} />
         <Text bold style={styles.customGoBackText}>
           Back
         </Text>

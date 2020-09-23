@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, Image, Modal, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Modal, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { baseImageUrl, discoverMovie } from '../networkManager';
 import Carousel from 'react-native-snap-carousel';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -32,7 +32,7 @@ const Discover = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.discoverContainer}>
       <TouchableOpacity style={styles.discoverMovieRandomButton} onPress={() => handleModalClick()}>
-        <Ionicons name={'ios-menu'} size={24} color={colors.lightBlue} />
+        <Ionicons name={'menu'} size={24} color={colors.lightBlue} />
         <Text style={styles.discoverMovieRandomText}>Random</Text>
       </TouchableOpacity>
       <Carousel

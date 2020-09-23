@@ -118,7 +118,7 @@ const MovieDetail = ({ route, navigation }) => {
             />
           </TouchableWithoutFeedback>
           <TouchableOpacity style={styles.customGoBackButton} onPress={() => navigation.goBack()}>
-            <Ionicons style={styles.customGoBackIcon} name="ios-arrow-back" size={24} color={colors.gold} />
+            <Ionicons style={styles.customGoBackIcon} name="chevron-back" size={24} color={colors.gold} />
             <Text bold style={styles.customGoBackText}>
               Back
             </Text>
@@ -138,7 +138,7 @@ const MovieDetail = ({ route, navigation }) => {
                 key={index}
                 style={styles.movieDetailGenreButton}>
                 <Text style={styles.movieDetailGenreText}>{genre.name}</Text>
-                <Ionicons style={styles.movieDetailGenreIcon} name="ios-arrow-forward" size={14} />
+                <Ionicons style={styles.movieDetailGenreIcon} name="chevron-forward" size={14} />
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -165,7 +165,7 @@ const MovieDetail = ({ route, navigation }) => {
                     ]}>
                     <Ionicons
                       style={styles.movieDetailListButtonIcon}
-                      name="ios-heart-empty"
+                      name="heart-outline"
                       color={!isWishlistClicked ? colors.red : colors.white}
                       size={20}
                     />
@@ -182,7 +182,7 @@ const MovieDetail = ({ route, navigation }) => {
                     ]}>
                     <Ionicons
                       style={styles.movieDetailListButtonIcon}
-                      name="ios-eye"
+                      name="eye"
                       color={!isSeenlistClicked ? colors.green : colors.white}
                       size={20}
                     />
@@ -194,7 +194,7 @@ const MovieDetail = ({ route, navigation }) => {
                 <TouchableOpacity
                   onPress={() => handleCustomlist()}
                   style={[styles.movieDetailListButton, styles.borderGold, { width: '60%' }]}>
-                  <Ionicons style={styles.movieDetailListButtonIcon} name="ios-list" color={colors.gold} size={20} />
+                  <Ionicons style={styles.movieDetailListButtonIcon} name="list" color={colors.gold} size={20} />
                   <Text style={(styles.fontSize16, { color: colors.gold })}>Add to custom list</Text>
                 </TouchableOpacity>
                 <View style={[styles.flexRow, styles.alignItemsCenter]}>
@@ -266,7 +266,7 @@ const MovieDetail = ({ route, navigation }) => {
                 <Text>Director</Text>
                 <Text style={styles.movieDetailDirectorNameText}>{movieDirector}</Text>
               </View>
-              <Ionicons style={styles.customGoBackIcon} name="ios-arrow-forward" size={14} color={colors.gray} />
+              <Ionicons style={styles.customGoBackIcon} name="chevron-forward" size={14} color={colors.gray} />
             </TouchableOpacity>
             <View style={styles.itemSeperator} />
             <View style={[styles.flexRow, { marginTop: 4 }]}>

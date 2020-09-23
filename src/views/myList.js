@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../theme/color';
+import { Fonts } from '../constants';
 import SegmentedControl from '@react-native-community/segmented-control';
 
 const MyList = () => {
@@ -61,7 +55,7 @@ const styles = StyleSheet.create({
   header: {
     color: colors.gold,
     fontSize: 40,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     marginLeft: 20,
     marginBottom: 10,
   },

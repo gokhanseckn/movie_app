@@ -109,7 +109,7 @@ const Navigator = () => {
             } else if (route.name === 'Discover') {
               iconName = 'ios-albums';
             } else if (route.name === 'My List') {
-              iconName = focused ? 'ios-heart' : 'ios-heart-empty';
+              iconName = focused ? 'heart' : 'heart-outline';
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },

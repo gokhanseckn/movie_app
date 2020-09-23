@@ -1,5 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../theme/color';
+import { Fonts } from '../../constants';
+
 const isIphoneX = Dimensions.get('window').height >= 812;
 
 const styles = StyleSheet.create({
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   subTitle: {
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     fontSize: 16,
   },
   goBackButton: {
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
   },
   customHeaderText: {
     color: colors.gold,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     fontSize: 30,
   },
   customGoBackButton: {
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   customGoBackText: {
     color: colors.gold,
     fontSize: 18,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
   },
   borderRed: {
     borderColor: colors.red,
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
   moviesHeaderText: {
     fontSize: 40,
     marginBottom: 10,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     color: colors.gold,
   },
   moviesGridScrollView: {
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
   },
   movieRowMovieTitle: {
     color: colors.gold,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     fontSize: 16,
   },
   movieRowVoteContainer: {
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     height: 250,
   },
   movieDetailMovieTitle: {
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     color: colors.gold,
     fontSize: 40,
     marginLeft: 20,
@@ -314,7 +316,7 @@ const styles = StyleSheet.create({
   seeAllHeaderText: {
     color: colors.gold,
     fontWeight: 'bold',
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
     fontSize: 16,
     marginLeft: 4,
   },
@@ -351,7 +353,7 @@ const styles = StyleSheet.create({
   discoverMovieTitle: {
     fontSize: 18,
     marginVertical: 10,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
   },
   discoverMovieImage: {
     width: '100%%',
@@ -361,7 +363,7 @@ const styles = StyleSheet.create({
   discoverMovieReleaseDate: {
     fontSize: 14,
     marginVertical: 10,
-    fontFamily: 'Fjalla One',
+    fontFamily: Fonts.FjallaOne,
   },
   discoverMovieRandomButton: {
     flexDirection: 'row',

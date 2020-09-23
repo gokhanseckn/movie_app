@@ -4,18 +4,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SearchBar = props => (
   <View style={styles.container}>
-    <Ionicons
-      style={styles.icon}
-      name="ios-search"
-      size={18}
-      color={'#CED0CE'}
-    />
-    <TextInput
-      clearButtonMode="always"
-      placeholder="Search any movie or person"
-      style={styles.input}
-      {...props}
-    />
+    <Ionicons style={styles.icon} name="search" size={18} color={'#CED0CE'} />
+    <TextInput clearButtonMode="always" placeholder="Search any movie or person" style={styles.input} {...props} />
   </View>
 );
 

@@ -50,7 +50,7 @@ const MovieRow = ({ navigation, movie }) => (
           {movie.overview}
         </Text>
       </View>
-      <Ionicons style={styles.alignSelfCenter} name="ios-arrow-forward" size={20} />
+      <Ionicons style={styles.alignSelfCenter} name="chevron-forward" size={20} />
     </React.Fragment>
   </TouchableOpacity>
 );
